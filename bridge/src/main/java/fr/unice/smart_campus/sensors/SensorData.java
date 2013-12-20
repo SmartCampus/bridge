@@ -61,19 +61,6 @@ public SensorData(String sdata)
 
 
 /**
- * Second constructor.
- * Create a SensorData by the help of real values.
- * 
- * @param value Sensor current value.
- */
-public SensorData(int value)
-{
-   sensorValue = value;
-   sensorTime = System.currentTimeMillis();
-}
-
-
-/**
  * Get the sensor name.
  * 
  * @return The name of the sensor.
