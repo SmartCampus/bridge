@@ -8,7 +8,7 @@ import java.util.HashMap;
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
  */
-public class LastSensorDataRepository
+public class CurrentSensorDataRepository
 {
 
 /** Map who store all the sensors */

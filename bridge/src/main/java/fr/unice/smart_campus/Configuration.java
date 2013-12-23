@@ -60,12 +60,11 @@ public String[] getControllersName()
  */
 public String getControllerConnection(String controllerName)
 {
-   // Build the controller.
-  JSONObject controllers = configContent.getJSONObject("controllers");
-  JSONObject controller =  controllers.getJSONObject(controllerName);
-  
-  // Return the connection type of the controller.
-  return controller.getString("connection");
+   // Get the controller.
+   JSONObject controller = getController(controllerName);
+
+   // Return the connection type of the controller.
+   return controller.getString("connection");
 }
 
 
@@ -78,12 +77,66 @@ public String getControllerConnection(String controllerName)
  */
 public String getControllerPortName(String controllerName)
 {
-     // Build the controller.
-  JSONObject controllers = configContent.getJSONObject("controllers");
-  JSONObject controller =  controllers.getJSONObject(controllerName);
-  
-  // Return the connection type of the controller.
-  return controller.getString("port");
+   // Get the controller.
+   JSONObject controller = getController(controllerName);
+
+   // Return the connection type of the controller.
+   return controller.getString("port");
+}
+
+
+/**
+ * Get the path of the data root directory.
+ * 
+ * @return The path of the data root directory.
+ */
+public String getDataStoragePath()
+{
+   // Get the root directory of data storage.
+   JSONObject config = configContent.getJSONObject("repository");
+   return config.getString("rootdir");
+}
+
+
+/**
+ * Get the controller data format.
+ * 
+ * @param controllerName Controller name.
+ * @return               The controller data format.
+ */
+public String getControllerDataFormat(String controllerName)
+{
+   // Get the controller.
+   JSONObject controller = getController(controllerName);
+
+   // Return the controller data format.
+   return controller.getString("format");
+}
+
+
+/**
+ * Get the repositroy data format.
+ * 
+ * @return Repository data format.
+ */
+public String getRepositoryDataFormat()
+{
+   // Return the controller data format.
+   return configContent.getJSONObject("repository").getString("format");
+}
+
+
+/**
+ * Get a controller from his name.
+ * 
+ * @param controllerName Controller to get.
+ * @return               The controller.
+ */
+private JSONObject getController(String controllerName)
+{
+   // Get the controller.
+   JSONObject controllers = configContent.getJSONObject("controllers");
+   return controllers.getJSONObject(controllerName);
 }
 
 
@@ -115,7 +168,6 @@ throws FileNotFoundException
    return sb.toString();
 }
 
-
 /**
  * Test program.
  * 
@@ -123,7 +175,7 @@ throws FileNotFoundException
  * 
  * @throws FileNotFoundException 
  */
-public static void main(String[] args)
+/*public static void main(String[] args)
 throws FileNotFoundException
 {
    File f = new File("run/config.cfg");
@@ -143,5 +195,5 @@ throws FileNotFoundException
    // Get the controller port.
    String port = conf.getControllerPortName("controller1");
    System.out.println(port);
-}
+}*/
 }

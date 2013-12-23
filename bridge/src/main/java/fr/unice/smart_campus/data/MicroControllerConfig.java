@@ -25,7 +25,7 @@ public class MicroControllerConfig
 {
 
 /** The database of sensors */
-private LastSensorDataRepository repository;
+private CurrentSensorDataRepository repository;
 
 /** Micro controller currently in use */
 private MicroController microController;
@@ -51,7 +51,7 @@ public MicroControllerConfig(MicroController controller, File dir, boolean confi
 throws IOException, InterruptedException
 {
    // Build variables.
-   repository = new LastSensorDataRepository();
+   repository = new CurrentSensorDataRepository();
    sensorsDescriptions = new HashMap<String, SensorDescriptor>();
    microController = controller;
 

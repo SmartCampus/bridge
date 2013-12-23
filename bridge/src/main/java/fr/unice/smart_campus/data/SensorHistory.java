@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import fr.unice.smart_campus.transformer.DataTransformer;
+
 
 /**
  * This class manage the history of sensor values for all sensors of one Arduino. 
@@ -21,17 +23,24 @@ public class SensorHistory
 /** Root directory of the sensors history */
 private File rootDirectory;
 
+/** Data transformer */
+private DataTransformer transformer;
+
 
 /**
  * Default constructor.
  * 
- * @param dir Directory where are stored history files.
+ * @param dir   Directory where are stored history files.
+ * @param trans Data transformer.
+ * 
  * @throws IOException 
  */
-public SensorHistory(File dir)
+public SensorHistory(File dir, DataTransformer trans)
 throws IOException
 {
    rootDirectory = dir;
+   transformer = trans;
+   
    if (!(rootDirectory.mkdirs()))
    {
       if (!rootDirectory.exists())
@@ -62,8 +71,7 @@ throws IOException, NoSuchFieldException, SecurityException
    pw = new PrintWriter(new FileWriter(f, true));
    try
    {
-      pw.println(sd.getSensorName() + " " + sd.getValue());
-      System.out.println("print : " + sd.getSensorName() + " " + sd.getValue());
+      pw.println(transformer.toStringWithoutName(sd));
    }
    finally
    {
@@ -99,7 +107,7 @@ throws ControllerException, IOException
    {
       // Build the ArrayList of datas.
       String line = scanner.nextLine();
-      SensorData sd = new SensorData(line);
+      SensorData sd = transformer.toSensorData(line);
       stockDatas.add(sd);      
    }
    scanner.close();

@@ -1,5 +1,5 @@
 
-package fr.unice.smart_campus.input;
+package fr.unice.smart_campus.transformer;
 
 import java.util.StringTokenizer;
 
@@ -12,10 +12,10 @@ import fr.unice.smart_campus.data.SensorData;
  * @version 1.0.0
  */
 public class MyProtocolInputTransformer
-implements InputTransformer
+implements DataTransformer
 {
 
-public SensorData build(String receivedData)
+public SensorData toSensorData(String receivedData)
 {
    // Initialize the object to build.
    SensorData sd = new SensorData();
@@ -34,6 +34,18 @@ public SensorData build(String receivedData)
    }
    sd.setSensorTime(System.currentTimeMillis());
    return sd;
+}
+
+public String toString(SensorData sd)
+{
+   // TODO Auto-generated method stub
+   return null;
+}
+
+public String toStringWithoutName(SensorData sd)
+{
+   // TODO Auto-generated method stub
+   return null;
 }
 
 }

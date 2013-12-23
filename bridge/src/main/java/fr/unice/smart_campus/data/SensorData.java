@@ -1,8 +1,6 @@
 
 package fr.unice.smart_campus.data;
 
-import java.net.UnknownHostException;
-import java.util.StringTokenizer;
 
 
 /**
@@ -31,32 +29,6 @@ private String sensorName;
 public SensorData()
 {
 
-}
-
-
-/**
- * First constrctor.
- * Construct a sensor with a String content.
- * 
- * @param sdata Sensor data value received from the Arduino. 
- * 
- * @throws UnknownHostException Address error.
- */
-public SensorData(String sdata)
-{         
-   // Build the object from the String.
-   StringTokenizer tkz = new StringTokenizer(sdata, ": ");
-   while (tkz.hasMoreElements())
-   {      
-      // Build sensor name.
-      if (tkz.nextToken().equals("n"))
-         sensorName = tkz.nextToken();
-      
-      // Build sensor value.
-      if (tkz.nextToken().equals("v"))
-         sensorValue = Float.parseFloat(tkz.nextToken());
-   }
-   sensorTime = System.currentTimeMillis();
 }
 
 

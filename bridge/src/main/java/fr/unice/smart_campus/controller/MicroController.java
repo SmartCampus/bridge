@@ -7,10 +7,11 @@ import java.util.StringTokenizer;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.LastSensorDataRepository;
+import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
+import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
  * This class treat the messages received from the micro controller.
@@ -32,29 +33,35 @@ private String receivedResponse = null;
 private String expectedResponseStart;
 
 /** The last sensor data repository */
-private LastSensorDataRepository sensorRepository;
+private CurrentSensorDataRepository sensorRepository;
 
 /** Sensor history */
 private SensorHistory history;
+
+/** Micro controller data transformer */
+private DataTransformer transformer;
 
 
 /**
  * Default constructor.
  * 
  * @param cnx        Connection to the micro controller.
+ * @param trans      Data transformer.
  * @param repository Last sensor data repository.
  * @param rdir       Micro controller data root directory.
  * 
  * @throws IOException 
  * @throws InterruptedException 
  */
-public MicroController(ControllerConnection cnx, LastSensorDataRepository repository, File rdir)
+public MicroController(ControllerConnection cnx, DataTransformer trans, CurrentSensorDataRepository repository, File rdir)
 throws InterruptedException, IOException
 {
+   // Construct the attributes.
    connection = cnx;
    connection.setConnectionListener(this);
+   transformer = trans;
    sensorRepository = repository;
-   history = new SensorHistory(new File(rdir, "History"));
+   history = new SensorHistory(new File(rdir, "History"), transformer);
 
    // Wait for micro controller setup termination.
    waitForResponseStartingBy("I: Arduino setup", 10000);
@@ -109,7 +116,7 @@ throws InterruptedException, IOException
 public synchronized void messageReceived(String msg)
 {
    // Check data type.
-   if (msg.startsWith("{"))
+   if (msg.startsWith("D:"))
    {
       try
       {
@@ -296,8 +303,9 @@ public void sensorDataReceived(String data)
 throws NoSuchFieldException, SecurityException, IOException
 {
    // Build the sensor data.
-   SensorData sd = new SensorData(data);
-
+   SensorData sd = transformer.toSensorData(data);
+   sd.setSensorTime(System.currentTimeMillis());
+   
    // Add data to the data history.
    history.addData(sd);
 
