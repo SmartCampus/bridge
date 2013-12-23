@@ -1,15 +1,16 @@
 
 package fr.unice.smart_campus.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
-import fr.unice.smart_campus.cnx.SerialConnection;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.LastSensorDataRepository;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
+import fr.unice.smart_campus.data.SensorHistory;
 
 /**
  * This class treat the messages received from the micro controller.
@@ -33,22 +34,27 @@ private String expectedResponseStart;
 /** The last sensor data repository */
 private LastSensorDataRepository sensorRepository;
 
+/** Sensor history */
+private SensorHistory history;
+
 
 /**
  * Default constructor.
  * 
  * @param cnx        Connection to the micro controller.
  * @param repository Last sensor data repository.
+ * @param rdir       Micro controller data root directory.
  * 
  * @throws IOException 
  * @throws InterruptedException 
  */
-public MicroController(ControllerConnection cnx, LastSensorDataRepository repository)
+public MicroController(ControllerConnection cnx, LastSensorDataRepository repository, File rdir)
 throws InterruptedException, IOException
 {
    connection = cnx;
    connection.setConnectionListener(this);
    sensorRepository = repository;
+   history = new SensorHistory(new File(rdir, "History"));
 
    // Wait for micro controller setup termination.
    waitForResponseStartingBy("I: Arduino setup", 10000);
@@ -105,7 +111,14 @@ public synchronized void messageReceived(String msg)
    // Check data type.
    if (msg.startsWith("{"))
    {
-      sensorDataReceived(msg.substring(2));
+      try
+      {
+         sensorDataReceived(msg.substring(2));
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
    }
 
    if (msg.startsWith(expectedResponseStart))
@@ -274,10 +287,22 @@ public void receivedSensorData(SensorData sdata)
  * Method called when a sensor data is received.
  * 
  * @param data Sensor data string.
+ * 
+ * @throws IOException 
+ * @throws SecurityException 
+ * @throws NoSuchFieldException 
  */
 public void sensorDataReceived(String data)
+throws NoSuchFieldException, SecurityException, IOException
 {
+   // Build the sensor data.
+   SensorData sd = new SensorData(data);
 
+   // Add data to the data history.
+   history.addData(sd);
+
+   // Add data to the data repository.
+   sensorRepository.addData(sd);
 }
 
 
@@ -290,7 +315,6 @@ public void infoReceived(String data)
 {
 
 }
-
 
 /**
  * Test main.
