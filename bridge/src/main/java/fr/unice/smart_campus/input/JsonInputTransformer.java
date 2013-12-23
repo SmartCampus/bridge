@@ -11,7 +11,7 @@ import fr.unice.smart_campus.data.SensorData;
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
  */
-public class JsonOutputTransformer
+public class JsonInputTransformer
 implements InputTransformer
 {
 
