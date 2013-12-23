@@ -3,7 +3,7 @@ package fr.unice.smart_campus.input;
 
 import java.util.StringTokenizer;
 
-import fr.unice.smart_campus.sensors.SensorData;
+import fr.unice.smart_campus.data.SensorData;
 
 /**
  * Transform a string received in a sensor data with a personal protocol.

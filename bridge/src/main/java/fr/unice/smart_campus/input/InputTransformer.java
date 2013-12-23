@@ -1,6 +1,6 @@
 package fr.unice.smart_campus.input;
 
-import fr.unice.smart_campus.sensors.SensorData;
+import fr.unice.smart_campus.data.SensorData;
 
 /**
  * Transform an input string into a SensorData.

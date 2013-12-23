@@ -3,7 +3,7 @@ package fr.unice.smart_campus.input;
 
 import org.json.JSONObject;
 
-import fr.unice.smart_campus.sensors.SensorData;
+import fr.unice.smart_campus.data.SensorData;
 
 /**
  * Transform a string received in a JSON format.
@@ -35,5 +35,4 @@ public SensorData build(String receivedData)
    // Return the built result.
    return result;
 }
-
 }

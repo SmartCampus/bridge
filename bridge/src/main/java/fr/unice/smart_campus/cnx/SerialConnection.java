@@ -7,12 +7,10 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.Scanner;
 
 /**
  * This class represents a serial connexion between the micro controller
@@ -21,8 +19,8 @@ import java.util.Scanner;
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
  */
-public class Serial
-implements InputProtocol
+public class SerialConnection
+implements ControllerConnection
 {
 
 /** The serial port */
@@ -30,12 +28,6 @@ private SerialPort port;
 
 /** The port we are normally going to use */
 private String portName;
-
-/** Response start */
-private String expectedResponseStart;
-
-/** Received response (used to notify command sender) */
-private String receivedResponse = null;
 
 /** Port time out */
 private static final int TIME_OUT = 2000;
@@ -52,6 +44,9 @@ private BufferedReader input;
 /** The output stream to the port */
 private OutputStream output;
 
+/** Connection listener */
+private Listener listener = null;
+
 
 /**
  * Initialize the connection between the computer and the 
@@ -60,7 +55,7 @@ private OutputStream output;
  * @param portN Serial port name.
  * @throws Exception 
  */
-public Serial(String portN)
+public SerialConnection(String portN)
 throws Exception
 {
    portName = portN;
@@ -104,60 +99,43 @@ throws Exception
       }
    });
    port.notifyOnDataAvailable(true);
-
-   // Wait for Arduino setup termination (to be changed).
-   waitForResponseStartingBy("I: Micro controller setup", 10000);
 }
 
 
 /**
- * Request command execution to Arduino.
+ * Get the port name currently in use. 
  * 
- * @param cmd Command to execute.
- * @return    Command response.
+ * @return The port name currently in use. 
+ */
+public String getPortName()
+{
+   return portName;
+}
+
+
+public void setConnectionListener(Listener listener)
+{
+   this.listener = listener;
+}
+
+
+/**
+ * Send message.
+ * 
+ * @param str String to send.
  * 
  * @throws IOException          IO error.
  * @throws InterruptedException Thread interrupted.
  */
-public synchronized String execCommand(String cmd)
+public synchronized void sendMessage(String str)
 throws IOException, InterruptedException
 {
-   System.out.println("Send : " + cmd);
-
-   // Clear response String.
-   receivedResponse = null;
+   System.out.println("Send : " + str);
 
    // Send the command.
-   output.write(cmd.getBytes());
+   output.write(str.getBytes());
    output.flush();
-   Thread.sleep(1500);
-
-   // Wait for response.
-   waitForResponseStartingBy("R:", 5000);
-   return receivedResponse.substring(2).trim();
-}
-
-
-/**
- * Execute all the commands from a file.
- * 
- * @param filePath Command file path.
- * 
- * @throws InterruptedException Thread interrupted.
- * @throws IOException          IO error.
- */
-public void execFileCommand(String filePath)
-throws IOException, InterruptedException
-{
-   Scanner scanner = new Scanner(new File(filePath));
-
-   // Read file line by line and execute each lines as commands.
-   while (scanner.hasNextLine())
-   {
-      String line = scanner.nextLine();
-      execCommand(line);
-   }
-   scanner.close();
+   //Thread.sleep(1500);
 }
 
 
@@ -179,87 +157,29 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
          }
          String inputLine = input.readLine();
          System.out.println("Received line : " + inputLine);
-
-         // Check data type.
-         if (inputLine.startsWith("{"))
-         {
-            sensorDataReceived(inputLine.substring(2));
-         }
-
-         else if (inputLine.startsWith("R:"))
-         {
-
-         }
-
-         else
-         {
-            infoReceived(inputLine);
-         }
-
-         if (inputLine.startsWith(expectedResponseStart))
-         {
-            receivedResponse = inputLine;
-            notify();
-         }
-
+         
+         // Notify listener.
+         if (listener != null)
+            listener.messageReceived(inputLine);
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
    }
+   
 }
 
 
 /**
- * Wait for a departure message.
- * 
- * @param str     Departure message.
- * @param timeout Wait timeout.
- * 
- * @throws InterruptedException 
- * @throws IOException 
+ * Close the connection.
  */
-private synchronized void waitForResponseStartingBy(String str, int timeout)
-throws InterruptedException, IOException
+public synchronized void close()
 {
-   expectedResponseStart = str;
-   wait(timeout);
-
-   // Check response.
-   if (!(receivedResponse.startsWith(expectedResponseStart)))
-      throw new IOException("Timeout waiting for message starting by : " + str);
+   if (port != null)
+   {
+      port.close();
+      port = null;
+   }
 }
-
-
-/**
- * Get the port name currently in use. 
- * 
- * @return The port name currently in use. 
- */
-public String getPortName()
-{
-   return portName;
-}
-
-
-/**
- * Method called when a sensor data is received.
- * 
- * @param data Sensor data string.
- */
-public void sensorDataReceived(String data)
-{
-}
-
-
-/**
- * Method called when an information data is received.
- * 
- * @param data Sensor data string.
- */
-public void infoReceived(String data)
-{
-}
-
 }

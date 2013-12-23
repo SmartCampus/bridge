@@ -1,7 +1,7 @@
 
 package fr.unice.smart_campus.output;
 
-import fr.unice.smart_campus.sensors.SensorData;
+import fr.unice.smart_campus.data.SensorData;
 
 /**
  * Transform a Sensor data into a JSON formatted string.

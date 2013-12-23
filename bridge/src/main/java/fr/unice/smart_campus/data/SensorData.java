@@ -1,5 +1,5 @@
 
-package fr.unice.smart_campus.sensors;
+package fr.unice.smart_campus.data;
 
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;

@@ -1,6 +1,6 @@
 package fr.unice.smart_campus.output;
 
-import fr.unice.smart_campus.sensors.SensorData;
+import fr.unice.smart_campus.data.SensorData;
 
 /**
  * Transform a sensor data to a output string format.

@@ -1,5 +1,5 @@
 
-package fr.unice.smart_campus.sensors;
+package fr.unice.smart_campus.data;
 
 /**
  * Arduino exceptions manager.
