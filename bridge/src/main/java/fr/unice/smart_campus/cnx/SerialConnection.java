@@ -92,7 +92,6 @@ throws Exception
    // Add events on the serial port.
    port.addEventListener(new SerialPortEventListener()
    {
-
       public void serialEvent(SerialPortEvent arg0)
       {
          processReceivedEvent(arg0);
@@ -124,18 +123,16 @@ public void setConnectionListener(Listener listener)
  * 
  * @param str String to send.
  * 
- * @throws IOException          IO error.
- * @throws InterruptedException Thread interrupted.
+ * @throws IOException IO error.
  */
 public synchronized void sendMessage(String str)
-throws IOException, InterruptedException
+throws IOException
 {
    System.out.println("Send : " + str);
 
    // Send the command.
    output.write(str.getBytes());
    output.flush();
-   //Thread.sleep(1500);
 }
 
 

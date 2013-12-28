@@ -113,6 +113,11 @@ throws InterruptedException, IOException
 }
 
 
+/**
+ * Check if a message is received from the micro controller.
+ * 
+ * @param msg Received message from the micro controller.
+ */
 public synchronized void messageReceived(String msg)
 {
    // Check data type.
@@ -138,6 +143,15 @@ public synchronized void messageReceived(String msg)
    {
       infoReceived(msg);
    }
+}
+
+
+/**
+ * Close the connection.
+ */
+public synchronized void close()
+{
+   connection.close();
 }
 
 
