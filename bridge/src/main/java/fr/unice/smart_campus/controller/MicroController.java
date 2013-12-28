@@ -50,7 +50,7 @@ private DataTransformer transformer;
  * @param repository Last sensor data repository.
  * @param rdir       Micro controller data root directory.
  * 
- * @throws IOException 
+ * @throws IOException          File not found.
  * @throws InterruptedException 
  */
 public MicroController(ControllerConnection cnx, DataTransformer trans, CurrentSensorDataRepository repository, File rdir)
@@ -170,7 +170,7 @@ throws ControllerException
    try
    {
       String resp = execCommand(command);
-      if (!(resp.startsWith("1")))
+      if (!(resp.startsWith("0")))
          throw new ControllerException(resp);
    }
    catch (Exception e)
