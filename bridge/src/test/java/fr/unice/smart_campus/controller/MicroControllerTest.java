@@ -1,9 +1,8 @@
 
 package fr.unice.smart_campus.controller;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,30 +91,31 @@ throws InterruptedException, IOException
  * 
  * @throws IOException          File not found.
  * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException  Command error.
  */
-@Test
+@Test(expected = ControllerException.class)
 public void test02_InvalidCommand()
-throws InterruptedException, IOException
+throws InterruptedException, IOException, ControllerException
 {
    MicroController mc = new MicroController(connection, transformer, repository, rootDir);
-   String receivedResponse = mc.execCommand("toto");
-   assertFalse(receivedResponse.startsWith("0"));
+   mc.execCommand("toto");
 }
 
 
 /**
  * Test the listsensors command.
  * 
- * @throws IOException          File not found.
- * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException Command error.
+ * @throws IOException 
+ * @throws InterruptedException 
  */
 @Test
 public void test03_CommandListSensors()
-throws InterruptedException, IOException
+throws ControllerException, InterruptedException, IOException
 {
    MicroController mc = new MicroController(connection, transformer, repository, rootDir);
-   String receivedResponse = mc.execCommand("listsensors");
-   assertTrue(receivedResponse.startsWith("0"));
+   SensorDescriptor[] sensorArray = mc.getAllSensors();
+   assertEquals(0, sensorArray.length);
 }
 
 
@@ -126,13 +126,70 @@ throws InterruptedException, IOException
  * @throws InterruptedException Thread interrupted.
  * @throws ControllerException  Micro controller error.
  */
-@Test
-public void test04_AddSensorError()
+@Test(expected = ControllerException.class)
+public void test04_CommandAdd_01()
 throws InterruptedException, IOException, ControllerException
 {
    MicroController mc = new MicroController(connection, transformer, repository, rootDir);
-   mc.addSensor(new SensorDescriptor("t1 2 3"));
-   
+   mc.addSensor(new SensorDescriptor("t1 2 -3")); // Wrong frequency.
 }
 
+
+/**
+ * Test the good execution of the add command.
+ * 
+ * @throws IOException          File not found.
+ * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException  Micro controller error.
+ */
+@Test
+public void test04_CommandAdd_02()
+throws InterruptedException, IOException, ControllerException
+{
+   // Execute the commands.
+   MicroController mc = new MicroController(connection, transformer, repository, rootDir);
+   mc.addSensor(new SensorDescriptor("t1 2 3"));
+}
+
+
+/**
+ * Test the good execution of the add command.
+ * 
+ * @throws IOException          File not found.
+ * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException  Micro controller error.
+ */
+@Test
+public void test04_CommandAdd_03()
+throws InterruptedException, IOException, ControllerException
+{
+   // Execute the commands.
+   MicroController mc = new MicroController(connection, transformer, repository, rootDir);
+   mc.addSensor(new SensorDescriptor("t1 2 3"));
+   mc.addSensor(new SensorDescriptor("t2 3 4"));
+   SensorDescriptor[] sensorArray = mc.getAllSensors();
+   
+   // Test the good execution.
+   assertEquals(2, sensorArray.length);
+   assertEquals("t1", sensorArray[0].getSensorName());
+   assertEquals("t2", sensorArray[1].getSensorName());
+}
+
+
+/**
+ * Test the case when the same sensor is added multiple time to the board.
+ * 
+ * @throws IOException          File not found.
+ * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException  Micro controller error.
+ */
+@Test (expected = ControllerException.class)
+public void test04_CommandAdd_04()
+throws InterruptedException, IOException, ControllerException
+{
+   // Execute the commands.
+   MicroController mc = new MicroController(connection, transformer, repository, rootDir);
+   mc.addSensor(new SensorDescriptor("t1 2 3"));
+   mc.addSensor(new SensorDescriptor("t1 3 4"));
+}
 }

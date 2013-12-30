@@ -3,6 +3,7 @@ package fr.unice.smart_campus.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
@@ -76,19 +77,33 @@ throws InterruptedException, IOException
  * 
  * @throws IOException          IO error.
  * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException 
  */
 public String execCommand(String cmd)
-throws IOException, InterruptedException
+throws ControllerException
 {
    // Clear response String.
    receivedResponse = null;
 
    // Send the command.
-   connection.sendMessage(cmd);
+   try
+   {
+      connection.sendMessage(cmd);
+      
+      // Wait for response.
+      waitForResponseStartingBy("R:", 5000);
+   }
+   catch (Exception e)
+   {
+      throw new ControllerException(e);
+   }
+   
+   // Build the response string.
+   String response = receivedResponse.substring(2).trim();
+   if (!(response.startsWith("0")))
+      throw new ControllerException(response);
 
-   // Wait for response.
-   waitForResponseStartingBy("R:", 5000);
-   return receivedResponse.substring(2).trim();
+   return response.substring(1).trim();
 }
 
 
@@ -167,16 +182,7 @@ throws ControllerException
 {
    // Build the string add command
    String command = "add " + sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency();
-   try
-   {
-      String resp = execCommand(command);
-      if (!(resp.startsWith("0")))
-         throw new ControllerException(resp);
-   }
-   catch (Exception e)
-   {
-      throw new ControllerException(e);
-   }
+   execCommand(command);
 }
 
 
@@ -191,15 +197,8 @@ public void deleteSensor(String name)
 throws ControllerException
 {
    // Execute the del command. 
-   try
-   {
-      execCommand("del " + name);
-      sensorRepository.remove(name);
-   }
-   catch (Exception e)
-   {
-      throw new ControllerException(e);
-   }
+   execCommand("del " + name);
+   sensorRepository.remove(name);
 }
 
 
@@ -214,14 +213,7 @@ throws ControllerException
 public void changeSensorFrequency(String name, int freq)
 throws ControllerException
 {
-   try
-   {
-      execCommand("freq " + name + " " + freq);
-   }
-   catch (Exception e)
-   {
-      throw new ControllerException(e);
-   }
+   execCommand("freq " + name + " " + freq);
 }
 
 
@@ -237,32 +229,25 @@ throws ControllerException
 public SensorDescriptor getSensorInformation(String name)
 throws ControllerException
 {
-   try
-   {
-      String response = execCommand("sensorinfo " + name);
+   String response = execCommand("sensorinfo " + name);
 
-      // Build the object from the String.
-      StringTokenizer tkz = new StringTokenizer(response, ": ");
+   // Build the object from the String.
+   StringTokenizer tkz = new StringTokenizer(response, ": ");
 
-      // Build sensor name.
-      tkz.nextToken();
-      String sensorName = tkz.nextToken();
+   // Build sensor name.
+   tkz.nextToken();
+   String sensorName = tkz.nextToken();
 
-      // Build sensor pinNumber.
-      tkz.nextToken();
-      int pinNumber = Integer.parseInt(tkz.nextToken());
+   // Build sensor pinNumber.
+   tkz.nextToken();
+   int pinNumber = Integer.parseInt(tkz.nextToken());
 
-      // Build sensor frequency.
-      tkz.nextToken();
-      int sensorFrequency = Integer.parseInt(tkz.nextToken());
+   // Build sensor frequency.
+   tkz.nextToken();
+   int sensorFrequency = Integer.parseInt(tkz.nextToken());
 
-      // Return the descriptor.
-      return new SensorDescriptor(sensorFrequency, pinNumber, sensorName);
-   }
-   catch (Exception e)
-   {
-      throw new ControllerException(e);
-   }
+   // Return the descriptor.
+   return new SensorDescriptor(sensorFrequency, pinNumber, sensorName);
 }
 
 
@@ -276,7 +261,19 @@ throws ControllerException
 public SensorDescriptor[] getAllSensors()
 throws ControllerException
 {
-   return null;
+   // Get list of sensors names.
+   String lsensors = execCommand("listsensors");
+   
+   // Build array of sensor descriptors.
+   ArrayList<SensorDescriptor> sensorArray = new ArrayList<SensorDescriptor>();
+   StringTokenizer tkz = new StringTokenizer(lsensors, " ");
+   while(tkz.hasMoreTokens())
+      sensorArray.add(getSensorInformation(tkz.nextToken()));
+   
+   // Build the result.
+   SensorDescriptor[] res =  new SensorDescriptor[sensorArray.size()];
+   sensorArray.toArray(res);
+   return res;
 }
 
 
@@ -319,7 +316,7 @@ throws NoSuchFieldException, SecurityException, IOException
    // Build the sensor data.
    SensorData sd = transformer.toSensorData(data);
    sd.setSensorTime(System.currentTimeMillis());
-   
+
    // Add data to the data history.
    history.addData(sd);
 

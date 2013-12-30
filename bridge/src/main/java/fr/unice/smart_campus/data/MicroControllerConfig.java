@@ -46,9 +46,10 @@ private File rootDirectory;
  * 
  * @throws IOException          IO Error.
  * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException 
  */
 public MicroControllerConfig(MicroController controller, File dir, boolean configMode)
-throws IOException, InterruptedException
+throws ControllerException, IOException
 {
    // Build variables.
    repository = new CurrentSensorDataRepository();
@@ -74,11 +75,11 @@ throws IOException, InterruptedException
  * 
  * @param sensor String command received.
  * 
- * @throws InterruptedException Thread interrupted.
  * @throws IOException          IO error.
+ * @throws ControllerException 
  */
 public void addSensor(String sensor)
-throws IOException, InterruptedException
+throws IOException, ControllerException
 {
    // Build the sensor descriptor.
    StringTokenizer tkz = new StringTokenizer(sensor, " ");
@@ -90,14 +91,7 @@ throws IOException, InterruptedException
 
    // Build the new SensorDescriptor.
    SensorDescriptor sd = new SensorDescriptor(frequency, pinNumber, sensorName);
-   try
-   {
-      microController.addSensor(sd);
-   }
-   catch (ControllerException e)
-   {
-      e.printStackTrace();
-   }
+   microController.addSensor(sd);
 
    sensorsDescriptions.put(sensorName, sd);
    writeToFile();
@@ -110,11 +104,10 @@ throws IOException, InterruptedException
  * @param name Name of the sensor to delete.
  * 
  * @throws ControllerException The name is not in the map.
- * @throws InterruptedException Thread interrupted.
  * @throws IOException          IO error.
  */
 public void delSensor(String name)
-throws ControllerException, IOException, InterruptedException
+throws ControllerException, IOException
 {
    // Execute the del command. 
    microController.deleteSensor(name);
@@ -160,10 +153,10 @@ throws IOException
  * Load the micro controller configuration from a file.
  * 
  * @throws IOException          IO error.
- * @throws InterruptedException Thread interrupted.
+ * @throws ControllerException 
  */
 private void loadConfig()
-throws IOException, InterruptedException
+throws IOException, ControllerException
 {
    // Check if file exists.
    File configFile = new File(rootDirectory, "config");

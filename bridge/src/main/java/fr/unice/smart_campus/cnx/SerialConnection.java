@@ -163,8 +163,7 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
       {
          e.printStackTrace();
       }
-   }
-   
+   } 
 }
 
 
