@@ -83,7 +83,7 @@ public String execCommand(String cmd)
 throws ControllerException
 {
    // Clear response String.
-   receivedResponse = null;
+   receivedResponse = "";
 
    // Send the command.
    try
@@ -247,7 +247,7 @@ throws ControllerException
    int sensorFrequency = Integer.parseInt(tkz.nextToken());
 
    // Return the descriptor.
-   return new SensorDescriptor(sensorFrequency, pinNumber, sensorName);
+   return new SensorDescriptor(sensorName, pinNumber, sensorFrequency);
 }
 
 
@@ -285,7 +285,7 @@ throws ControllerException
 public void resetController()
 throws ControllerException
 {
-
+   execCommand("resetsensors");
 }
 
 

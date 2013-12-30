@@ -28,7 +28,7 @@ private String sensorName;
  * @param pin       Sensor pin number.
  * @param name      Sensor name.
  */
-public SensorDescriptor(int frequency, int pin, String name)
+public SensorDescriptor(String name, int pin, int frequency)
 {
    sensorFrequency = frequency;
    pinNumber = pin;

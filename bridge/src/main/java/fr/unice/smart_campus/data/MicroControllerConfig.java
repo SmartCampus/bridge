@@ -90,7 +90,7 @@ throws IOException, ControllerException
    int frequency = Integer.parseInt(tkz.nextToken());
 
    // Build the new SensorDescriptor.
-   SensorDescriptor sd = new SensorDescriptor(frequency, pinNumber, sensorName);
+   SensorDescriptor sd = new SensorDescriptor(sensorName, pinNumber, frequency);
    microController.addSensor(sd);
 
    sensorsDescriptions.put(sensorName, sd);
