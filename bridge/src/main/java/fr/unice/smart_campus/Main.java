@@ -42,7 +42,7 @@ throws Exception
    Configuration programConfig = new Configuration(configFile);
 
    // Build the connection.
-   for (String n : programConfig.getControllersName())
+   for (String n : programConfig.getAllControllerNames())
    {
       microControllers.add(createMicroController(n, programConfig));
    }
@@ -68,7 +68,7 @@ throws Exception
    String portName = config.getControllerPortName(name);
 
    // Get the connection type.
-   String connectionType = config.getControllerConnection(name);
+   String connectionType = config.getControllerConnectionType(name);
    
    // Get the controller format.
    DataTransformer transformer;

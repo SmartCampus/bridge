@@ -22,16 +22,6 @@ private long sensorTime;
 private String sensorName;
 
 
-
-/**
- * Default constructor
- */
-public SensorData()
-{
-
-}
-
-
 /**
  * Get the sensor name.
  * 

@@ -42,7 +42,7 @@ throws FileNotFoundException
  * 
  * @return The list of all controllers name.
  */
-public String[] getControllersName()
+public String[] getAllControllerNames()
 {
    JSONObject controllers = configContent.getJSONObject("controllers");
    if (controllers == null)
@@ -58,7 +58,7 @@ public String[] getControllersName()
  * 
  * @return The type of controller connection.
  */
-public String getControllerConnection(String controllerName)
+public String getControllerConnectionType(String controllerName)
 {
    // Get the controller.
    JSONObject controller = getController(controllerName);
@@ -133,7 +133,7 @@ public String getRepositoryDataFormat()
  * @return               The controller.
  */
 private JSONObject getController(String controllerName)
-{
+{   
    // Get the controller.
    JSONObject controllers = configContent.getJSONObject("controllers");
    return controllers.getJSONObject(controllerName);

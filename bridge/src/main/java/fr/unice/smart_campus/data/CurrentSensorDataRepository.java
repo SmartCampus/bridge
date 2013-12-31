@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.data;
 
 import java.util.HashMap;
@@ -43,9 +44,14 @@ public SensorData get(String key)
  * Remove a sensor with its key.
  * 
  * @param key Sensor key.
+ * 
+ * @throws ControllerException Micro controller error.
  */
 public void remove(String key)
+throws ControllerException
 {
+   if (sensorsStore.get(key) == null)
+      throw new ControllerException("The key does not exists.");
    sensorsStore.remove(key);
 }
 }
