@@ -23,6 +23,24 @@ private String sensorName;
 
 
 /**
+ * Default constructor.
+ * 
+ * @param name  Name of the sensor.
+ * @param value Value of the sensor.
+ * @param time  Time where the value was send.
+ */
+public SensorData(String name, double value, long time)
+{
+   sensorName = name;
+   sensorValue = value;
+   sensorTime = time;
+}
+
+
+
+
+
+/**
  * Get the sensor name.
  * 
  * @return The name of the sensor.
@@ -83,6 +101,22 @@ public long getTime()
 public void setSensorTime(long time)
 {
    sensorTime = time;
+}
+
+
+/**
+ * Test equality between two Sensor Data.
+ * 
+ * @param obj Object to compare with this.
+ * @return   true if equals, false if not.
+ */
+public boolean equals(Object obj)
+{
+   if (!(obj instanceof SensorData))
+      return false;
+   
+   SensorData sd = (SensorData) obj;
+   return ((sensorTime == sd.sensorTime) && (sensorValue == sd.getValue()) && (sensorName.equals(sd.getSensorName())));
 }
 
 }

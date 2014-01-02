@@ -92,6 +92,7 @@ throws Exception
    // Add events on the serial port.
    port.addEventListener(new SerialPortEventListener()
    {
+
       public void serialEvent(SerialPortEvent arg0)
       {
          processReceivedEvent(arg0);
@@ -150,20 +151,21 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
          // Wait input to be ready (mandatory, exception o/w).
          while (!input.ready())
          {
-            Thread.sleep(100);
+            Thread.sleep(1);
          }
          String inputLine = input.readLine();
          System.out.println("Received line : " + inputLine);
-         
+
          // Notify listener.
          if (listener != null)
             listener.messageReceived(inputLine);
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         if (port != null)
+            e.printStackTrace();
       }
-   } 
+   }
 }
 
 
@@ -176,6 +178,7 @@ public synchronized void close()
    {
       port.close();
       port = null;
+      input = null;
    }
 }
 }

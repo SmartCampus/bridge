@@ -27,7 +27,7 @@ private SensorData data;
 @Before
 public void testSetup()
 {
-   data = new SensorData();
+   data = new SensorData("t1", 3, System.currentTimeMillis());
 }
 
 /**

@@ -49,10 +49,7 @@ public void test01_Constructor()
 public void test02_AddData()
 {
    // Build the sensor data value. 
-   SensorData sd = new SensorData();
-   sd.setSensorName("t1");
-   sd.setSensorTime(System.currentTimeMillis());
-   sd.setSensorValue(3);
+   SensorData sd = new SensorData("t1", 3, System.currentTimeMillis());
    repository.addData(sd);
 
    // Check if the sensor data has been put in the repository.
@@ -79,10 +76,7 @@ public void test03_Get_01()
 public void test03_Get_02()
 {
    // Build the sensor data value. 
-   SensorData sd = new SensorData();
-   sd.setSensorName("t1");
-   sd.setSensorTime(System.currentTimeMillis());
-   sd.setSensorValue(3);
+   SensorData sd = new SensorData("t1", 3, System.currentTimeMillis());
    repository.addData(sd);
 
    // Get the sensor data.
@@ -115,10 +109,7 @@ public void test04_Remove_02()
 throws ControllerException
 {
    // Build the sensor data value. 
-   SensorData sd = new SensorData();
-   sd.setSensorName("t1");
-   sd.setSensorTime(System.currentTimeMillis());
-   sd.setSensorValue(3);
+   SensorData sd = new SensorData("t1", 3, System.currentTimeMillis());
    repository.addData(sd);
 
    // Remove the sensor data.

@@ -27,14 +27,14 @@ public SensorData toSensorData(String jStr)
    JSONObject jsonObject = new JSONObject(jStr);
    
    // Build the sensor data from the JSON object.
-   SensorData result = new SensorData();
-   result.setSensorName(jsonObject.getString("n"));
-   result.setSensorValue(jsonObject.getDouble("v"));
+   String name = jsonObject.getString("n");
+   double value = jsonObject.getDouble("v");
+   long time = 0;
    if (jsonObject.has("t"))
-      result.setSensorTime(jsonObject.getLong("t"));
+      time = jsonObject.getLong("t");
    
    // Return the built result.
-   return result;
+   return new SensorData(name, value, time);
 }
 
 
@@ -51,14 +51,13 @@ public SensorData toSensorData(String jStr, String name)
    JSONObject jsonObject = new JSONObject(jStr);
    
    // Build the sensor data from the JSON object.
-   SensorData result = new SensorData();
-   result.setSensorName(name);
-   result.setSensorValue(jsonObject.getDouble("v"));
+   double value = jsonObject.getDouble("v");
+   long time = 0;
    if (jsonObject.has("t"))
-      result.setSensorTime(jsonObject.getLong("t"));
+      time = jsonObject.getLong("t");
    
    // Return the built result.
-   return result;
+   return new SensorData(name, value, time);
 }
 
 

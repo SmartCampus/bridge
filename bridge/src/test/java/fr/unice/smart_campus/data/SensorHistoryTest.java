@@ -8,9 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -49,20 +47,6 @@ throws IOException
    transformer = new JsonTransformer();
    File rdir = new File("ControllerDatas/History");
    history = new SensorHistory(rdir, transformer);
-}
-
-
-/**
- * Method to call after each test.
- * 
- * @throws IOException File error.
- */
-@After
-public void testEnd()
-throws IOException
-{
-   File f = new File("ControllerDatas/history");
-   deleteFile(f);
 }
 
 
@@ -111,29 +95,21 @@ throws IOException
 /**
  * Test addData() method good execution.
  * 
- * @throws IOException File not found.
+ * @throws IOException         File not found.
+ * @throws ControllerException Micro controller error.
  */
 @Test
 public void test03_AddData_02()
-throws IOException
+throws IOException, ControllerException
 {
    // Build the sensor data and add it to the history.
-   SensorData sd = transformer.toSensorData("{\"n\":\"" + "t1" + "\"," + "\"v\":" + 200 + "," + "\"t\":" + System.currentTimeMillis() + "}");
+   SensorData sd = new SensorData("t1", 200, System.currentTimeMillis());
    history.addData(sd);
 
    // Check if sensor data history file has been created.
-   File f = new File("ControllerDatas/History/" + sd.getSensorName());
-   assertTrue(f.exists());
-
-   // Check file content.
-   Scanner scan = new Scanner(f);
-   assertTrue(scan.hasNext());
-   String line = scan.nextLine();
-   assertEquals("{\"v\":" + 200 + "," + "\"t\":" + sd.getTime() + "}", line);
-   scan.close();
-
-   // Delete the file to ensure the test continuity.
-   f.delete();
+   SensorData[] sensorHistory = history.loadHistory("t1");
+   assertTrue(sensorHistory.length > 0);
+   assertTrue(sd.equals(sensorHistory[sensorHistory.length - 1]));
 }
 
 
@@ -161,56 +137,20 @@ throws ControllerException, IOException
 public void test04_LoadHistory_02()
 throws IOException, ControllerException
 {
+   // Load the history for a first time.
+   SensorData[] sensorHistory1 = history.loadHistory("t1");
+   assertNotNull(sensorHistory1);
+
    // Add sensor data to the history.
-   SensorData sd1 = transformer.toSensorData("{\"n\":\"" + "t1" + "\"," + "\"v\":" + 200 + "," + "\"t\":" + System.currentTimeMillis() + "}");
-   SensorData sd2 = transformer.toSensorData("{\"n\":\"" + "t1" + "\"," + "\"v\":" + 210 + "," + "\"t\":" + System.currentTimeMillis() + "}");
+   SensorData sd1 = new SensorData("t1", 200, System.currentTimeMillis());
+   SensorData sd2 = new SensorData("t1", 210, System.currentTimeMillis());
    history.addData(sd1);
    history.addData(sd2);
 
    // Load the history from the file.
-   SensorData[] sensorHistory = history.loadHistory("t1");
-   assertNotNull(sensorHistory);
-   assertEquals(2, sensorHistory.length);
-   assertEquals("t1", sensorHistory[0].getSensorName());
-   assertEquals("t1", sensorHistory[1].getSensorName());
-
-}
-
-
-/**
- * Delete a file.
- * 
- * @param file         File to delete.
- * @throws IOException IO error.
- */
-private void deleteFile(File file)
-throws IOException
-{
-   // Check if file is a directory or a file.
-   if (file.isDirectory())
-   {
-      // If empty directory, delete it.
-      if (file.list().length == 0)
-         file.delete();
-
-      else
-      {
-         // Delete the files in the directory.
-         String[] files = file.list();
-         for (String temp : files)
-         {
-            File fileDelete = new File(file, temp);
-            deleteFile(fileDelete);
-         }
-
-         // Delete the directory if it is empty.
-         if (file.list().length == 0)
-            file.delete();
-      }
-
-   }
-   else
-      // Delete the file if its a file.
-      file.delete();
+   SensorData[] sensorHistory2 = history.loadHistory("t1");
+   assertEquals(sensorHistory2.length, sensorHistory1.length + 2);
+   assertEquals(sensorHistory2[sensorHistory2.length - 2], sd1);
+   assertEquals(sensorHistory2[sensorHistory2.length - 1], sd2);
 }
 }

@@ -42,6 +42,9 @@ private SensorHistory history;
 /** Micro controller data transformer */
 private DataTransformer transformer;
 
+/** Micro controller configuration */
+private MicroControllerConfig configuration;
+
 
 /**
  * Default constructor.
@@ -53,9 +56,10 @@ private DataTransformer transformer;
  * 
  * @throws IOException          File not found.
  * @throws InterruptedException 
+ * @throws ControllerException 
  */
 public MicroController(ControllerConnection cnx, DataTransformer trans, CurrentSensorDataRepository repository, File rdir)
-throws InterruptedException, IOException
+throws InterruptedException, IOException, ControllerException
 {
    // Construct the attributes.
    connection = cnx;
@@ -63,9 +67,16 @@ throws InterruptedException, IOException
    transformer = trans;
    sensorRepository = repository;
    history = new SensorHistory(new File(rdir, "History"), transformer);
+   configuration = new MicroControllerConfig(new File(rdir, "controller.cfg"));
 
    // Wait for micro controller setup termination.
    waitForResponseStartingBy("I: Arduino setup", 10000);
+
+   // Recreate all sensor that were store in the configuration.
+   SensorDescriptor[] descriptors = configuration.getAllSensors();
+   for (SensorDescriptor sd : descriptors)
+      addSensorInternal(sd);
+
 }
 
 
@@ -89,7 +100,7 @@ throws ControllerException
    try
    {
       connection.sendMessage(cmd);
-      
+
       // Wait for response.
       waitForResponseStartingBy("R:", 5000);
    }
@@ -97,34 +108,13 @@ throws ControllerException
    {
       throw new ControllerException(e);
    }
-   
+
    // Build the response string.
    String response = receivedResponse.substring(2).trim();
    if (!(response.startsWith("0")))
       throw new ControllerException(response);
 
    return response.substring(1).trim();
-}
-
-
-/**
- * Wait for a departure message.
- * 
- * @param str     Departure message.
- * @param timeout Wait timeout.
- * 
- * @throws InterruptedException 
- * @throws IOException 
- */
-private synchronized void waitForResponseStartingBy(String str, int timeout)
-throws InterruptedException, IOException
-{
-   expectedResponseStart = str;
-   wait(timeout);
-
-   // Check response.
-   if (!(receivedResponse.startsWith(expectedResponseStart)))
-      throw new IOException("Timeout waiting for message starting by : " + str);
 }
 
 
@@ -180,9 +170,17 @@ public synchronized void close()
 public void addSensor(SensorDescriptor sd)
 throws ControllerException
 {
-   // Build the string add command
-   String command = "add " + sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency();
-   execCommand(command);
+   // Create sensor in the controller.
+   addSensorInternal(sd);
+   try
+   {
+      // Save sensor in controller config.
+      configuration.addSensor(sd);
+   }
+   catch (IOException e)
+   {
+      throw new ControllerException("Controller config save error : " + e);
+   }
 }
 
 
@@ -198,7 +196,19 @@ throws ControllerException
 {
    // Execute the del command. 
    execCommand("del " + name);
+
+   // Remove last sensor data from repository.
    sensorRepository.remove(name);
+
+   // Remove from config
+   try
+   {
+      configuration.delSensor(name);
+   }
+   catch (IOException e)
+   {
+      throw new ControllerException("Controller config save error : " + e);
+   }
 }
 
 
@@ -263,15 +273,15 @@ throws ControllerException
 {
    // Get list of sensors names.
    String lsensors = execCommand("listsensors");
-   
+
    // Build array of sensor descriptors.
    ArrayList<SensorDescriptor> sensorArray = new ArrayList<SensorDescriptor>();
    StringTokenizer tkz = new StringTokenizer(lsensors, " ");
-   while(tkz.hasMoreTokens())
+   while (tkz.hasMoreTokens())
       sensorArray.add(getSensorInformation(tkz.nextToken()));
-   
+
    // Build the result.
-   SensorDescriptor[] res =  new SensorDescriptor[sensorArray.size()];
+   SensorDescriptor[] res = new SensorDescriptor[sensorArray.size()];
    sensorArray.toArray(res);
    return res;
 }
@@ -286,6 +296,8 @@ public void resetController()
 throws ControllerException
 {
    execCommand("resetsensors");
+   configuration.clear();
+   sensorRepository.clear();
 }
 
 
@@ -333,6 +345,43 @@ throws NoSuchFieldException, SecurityException, IOException
 public void infoReceived(String data)
 {
 
+}
+
+
+/**
+ * Add a new sensor to the micro controller.
+ * 
+ * @param sd Description of the sensor to add.
+ * 
+ * @throws ControllerException Command error.
+ */
+private void addSensorInternal(SensorDescriptor sd)
+throws ControllerException
+{
+   // Build the string add command
+   String command = "add " + sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency();
+   execCommand(command);
+}
+
+
+/**
+ * Wait for a departure message.
+ * 
+ * @param str     Departure message.
+ * @param timeout Wait timeout.
+ * 
+ * @throws InterruptedException 
+ * @throws IOException 
+ */
+private synchronized void waitForResponseStartingBy(String str, int timeout)
+throws InterruptedException, IOException
+{
+   expectedResponseStart = str;
+   wait(timeout);
+
+   // Check response.
+   if (!(receivedResponse.startsWith(expectedResponseStart)))
+      throw new IOException("Timeout waiting for message starting by : " + str);
 }
 
 /**

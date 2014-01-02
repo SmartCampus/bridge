@@ -44,14 +44,18 @@ public SensorData get(String key)
  * Remove a sensor with its key.
  * 
  * @param key Sensor key.
- * 
- * @throws ControllerException Micro controller error.
  */
 public void remove(String key)
-throws ControllerException
 {
-   if (sensorsStore.get(key) == null)
-      throw new ControllerException("The key does not exists.");
    sensorsStore.remove(key);
+}
+
+
+/**
+ * Clear the sensor data repository.
+ */
+public void clear()
+{
+   sensorsStore.clear();
 }
 }

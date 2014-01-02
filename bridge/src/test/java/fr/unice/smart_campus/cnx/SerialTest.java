@@ -77,4 +77,22 @@ throws Exception
    connection.close();
    connection.sendMessage("Hello, world!");
 }
+
+
+/**
+ * Test to open and close the connection multiple time.
+ * 
+ * @throws Exception 
+ */
+@Test
+public void test05_OpenAndClose()
+throws Exception
+{
+   for (int i = 0; i < 5; i++)
+   {
+      SerialConnection connection = new SerialConnection("COM4");
+      connection.close();
+   }
+}
+
 }

@@ -112,8 +112,45 @@ throws ControllerException, IOException
    scanner.close();
 
    // Build the result array.
-   SensorData[] res =  new SensorData[stockDatas.size()];
+   SensorData[] res = new SensorData[stockDatas.size()];
    stockDatas.toArray(res);
+   return res;
+}
+
+
+/**
+ * Gives all the data between two time value.
+ * 
+ * @param name    Sensor name. 
+ * @param timeMin Time from which we want to get back the data.
+ * @param timeMax Time from which we stop to get back the data.
+ * @return        An array containing the data between timeMin and timeMax.
+ * 
+ * @throws IOException         IO error.
+ * @throws ControllerException Micro controller error.
+ */
+public SensorData[] readData(long timeMin, long timeMax, String name)
+throws ControllerException, IOException
+{
+   if ((timeMin > timeMax) || (timeMax < timeMin))
+      throw new ControllerException("Invalid time.");
+   
+   // Sensor array result.
+   ArrayList<SensorData> result = new ArrayList<SensorData>();
+
+   // Get all the datas of the given sensor name.
+   SensorData[] allData = loadHistory(name);
+
+   // Build the result ArrayList.
+   for (SensorData sd : allData)
+   {
+      while ((sd.getTime() >= timeMin) && (sd.getTime() <= timeMax))
+         result.add(sd);
+   }
+
+   // Build the result array.
+   SensorData[] res = new SensorData[result.size()];
+   result.toArray(res);
    return res;
 }
 }
