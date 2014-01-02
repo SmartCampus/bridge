@@ -39,6 +39,30 @@ public SensorData toSensorData(String jStr)
 
 
 /**
+ * Build a sensor data from a string in JSON format and a given name.
+ * 
+ * @param jStr Micro controller String received.
+ * @param name Sensor name.
+ * @return     The SensorData built from this 2 params.
+ */
+public SensorData toSensorData(String jStr, String name)
+{
+    // Build the JSON Object
+   JSONObject jsonObject = new JSONObject(jStr);
+   
+   // Build the sensor data from the JSON object.
+   SensorData result = new SensorData();
+   result.setSensorName(name);
+   result.setSensorValue(jsonObject.getDouble("v"));
+   if (jsonObject.has("t"))
+      result.setSensorTime(jsonObject.getLong("t"));
+   
+   // Return the built result.
+   return result;
+}
+
+
+/**
  * Build a string from a sensor data.
  * 
  * @param sd Sensor data.

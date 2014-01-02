@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.transformer;
 
 import fr.unice.smart_campus.data.SensorData;
@@ -21,6 +22,15 @@ public SensorData toSensorData(String receivedData);
 
 
 /**
+ * 
+ * @param line       Data received from the micro controller.
+ * @param sensorName Sensor name.
+ * @return           A sensor data built from the two String.
+ */
+public SensorData toSensorData(String line, String sensorName);
+
+
+/**
  * Build a string from a sensor data.
  * 
  * @param sd Sensor data.
@@ -36,4 +46,5 @@ public String toString(SensorData sd);
  * @return   String representing the sensor data without its name.
  */
 public String toStringWithoutName(SensorData sd);
+
 }
