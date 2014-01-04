@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import org.junit.After;
 import org.junit.Before;
@@ -72,23 +71,37 @@ public void test01_AddSensor()
 throws IOException, ControllerException
 {
    microController.addSensor(new SensorDescriptor("t1", 2, 3));
+   MicroControllerConfig microControllerConfig = microController.getConfig();
 
-   // Check if file exists.
-   File f = new File("ControllerDatas/controller.cfg");
-   assertTrue(f.exists());
+   // Check if sensor has been correctly added.
+   SensorDescriptor[] descriptors = microControllerConfig.getAllSensors();
+   assertEquals(1, descriptors.length);
+   assertEquals("t1", descriptors[0].getSensorName());
+}
 
-   // Check file first line.
-   Scanner scanner = new Scanner(f);
-   assertTrue(scanner.hasNext());
 
-   // Build the sensor descriptor from the read line.
-   SensorDescriptor sd = new SensorDescriptor(scanner.nextLine());
-   assertEquals("t1", sd.getSensorName());
-   assertEquals(2, sd.getPinNumber());
-   assertEquals(3, sd.getFrequency());
+/**
+ * Test addSensor() method good execution.
+ * 
+ * @throws ControllerException Micro controller error.
+ * @throws IOException         IO error.
+ */
+@Test
+public void test02_FileTest()
+throws IOException, ControllerException
+{
+   // Get the MicroController configuration.
+   MicroControllerConfig microControllerConfig = microController.getConfig();
 
-   // Close the scanner.
-   scanner.close();
+   // Volontary remove file.
+   microControllerConfig.getConfigFile().delete();
+
+   // Add a sensor to the file.
+   microController.addSensor(new SensorDescriptor("t1", 2, 3));
+
+   // Check if config file has been successfully re created.
+   File config = microControllerConfig.getConfigFile();
+   assertTrue(config.exists());
 }
 
 
@@ -99,7 +112,7 @@ throws IOException, ControllerException
  * @throws ControllerException Micro controller error.
  */
 @Test(expected = ControllerException.class)
-public void test02_DelSensor()
+public void test03_DelSensor()
 throws ControllerException, IOException
 {
    microController.deleteSensor("test");
@@ -112,7 +125,7 @@ throws ControllerException, IOException
  * 
  */
 @Test
-public void test03_TestAll()
+public void test04_TestAll()
 throws Exception
 {
    microController.addSensor(new SensorDescriptor("t1", 2, 3));
@@ -125,7 +138,7 @@ throws Exception
    assertEquals(2, sd.length);
    assertEquals("t1", sd[0].getSensorName());
    assertEquals("t2", sd[1].getSensorName());
-   
+
    // Delete a sensor.
    microController.deleteSensor("t1");
    microController.close();
@@ -150,34 +163,5 @@ throws Exception
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
    File rootDir = new File("ControllerDatas");
    microController = new MicroController(connection, transformer, repository, rootDir);
-}
-
-
-/**
- * Delete a file.
- * 
- * @param file         File to delete.
- * @throws IOException IO error.
- */
-private void deleteFile(File file)
-throws IOException
-{
-   // Check if file is a directory or a file.
-   if (file.isDirectory())
-   {
-      // Delete the files in the directory.
-      String[] files = file.list();
-      if (files != null)
-      {
-         for (String temp : files)
-         {
-            File fileDelete = new File(file, temp);
-            deleteFile(fileDelete);
-         }
-      }
-   }
-
-   // Delete the file.
-   file.delete();
 }
 }

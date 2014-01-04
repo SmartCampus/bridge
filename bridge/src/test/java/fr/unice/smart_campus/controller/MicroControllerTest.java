@@ -12,6 +12,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
 import fr.unice.smart_campus.data.ControllerException;
@@ -44,10 +45,10 @@ public void testSetup()
 throws Exception
 {
    // Build the test attributes.
-   ControllerConnection connection = (SerialConnection) new SerialConnection("COM4");
+   ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
    DataTransformer transformer = new JsonTransformer();
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
-   File rootDir = new File("ControllerDatas");
+   File rootDir = new File(Constants.DATA_PATH);
    microController = new MicroController(connection, transformer, repository, rootDir);
    microController.resetController();
 }
@@ -151,19 +152,22 @@ throws ControllerException
 public void test05_CommandAdd_03()
 throws ControllerException
 {
+   SensorDescriptor[] array = microController.getAllSensors();
+   assertEquals(0, array.length);
+   
    // Execute the commands.
    microController.addSensor(new SensorDescriptor("t1 2 3"));
-   microController.addSensor(new SensorDescriptor("t2 3 4"));
-   SensorDescriptor[] sensorArray = microController.getAllSensors();
+   microController.addSensor(new SensorDescriptor("t2 7 5"));
 
    // Test the good execution.
+   SensorDescriptor[] sensorArray = microController.getAllSensors();
    assertEquals(2, sensorArray.length);
    assertEquals("t1", sensorArray[0].getSensorName());
    assertEquals(2, sensorArray[0].getPinNumber());
    assertEquals(3, (sensorArray[0].getFrequency() / 1000));
    assertEquals("t2", sensorArray[1].getSensorName());
-   assertEquals(3, sensorArray[1].getPinNumber());
-   assertEquals(4, (sensorArray[1].getFrequency() / 1000));
+   assertEquals(7, sensorArray[1].getPinNumber());
+   assertEquals(5, (sensorArray[1].getFrequency() / 1000));
 }
 
 

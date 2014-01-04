@@ -31,7 +31,7 @@ private ControllerConnection connection;
 private String receivedResponse = null;
 
 /** Response start */
-private String expectedResponseStart;
+private String expectedMessageStart;
 
 /** The last sensor data repository */
 private CurrentSensorDataRepository sensorRepository;
@@ -63,6 +63,7 @@ throws InterruptedException, IOException, ControllerException
 {
    // Construct the attributes.
    connection = cnx;
+   expectedMessageStart = "I: Setup terminated";
    connection.setConnectionListener(this);
    transformer = trans;
    sensorRepository = repository;
@@ -70,13 +71,24 @@ throws InterruptedException, IOException, ControllerException
    configuration = new MicroControllerConfig(new File(rdir, "controller.cfg"));
 
    // Wait for micro controller setup termination.
-   waitForResponseStartingBy("I: Arduino setup", 10000);
+   waitForMessageStartingBy(10000);
 
    // Recreate all sensor that were store in the configuration.
    SensorDescriptor[] descriptors = configuration.getAllSensors();
    for (SensorDescriptor sd : descriptors)
       addSensorInternal(sd);
 
+}
+
+
+/**
+ * Get MicroController configuration.
+ * 
+ * @return The MicroController configuration.
+ */
+public MicroControllerConfig getConfig()
+{
+   return configuration;
 }
 
 
@@ -94,15 +106,16 @@ public String execCommand(String cmd)
 throws ControllerException
 {
    // Clear response String.
-   receivedResponse = "";
+   receivedResponse = null;
 
    // Send the command.
    try
    {
+      expectedMessageStart = "R:";
       connection.sendMessage(cmd);
 
       // Wait for response.
-      waitForResponseStartingBy("R:", 5000);
+      waitForMessageStartingBy(5000);
    }
    catch (Exception e)
    {
@@ -138,7 +151,7 @@ public synchronized void messageReceived(String msg)
       }
    }
 
-   if (msg.startsWith(expectedResponseStart))
+   if (msg.startsWith(expectedMessageStart))
    {
       receivedResponse = msg;
       notify();
@@ -365,7 +378,7 @@ throws ControllerException
 
 
 /**
- * Wait for a departure message.
+ * Wait for message starting by string contained in variable expectedMessageStart.
  * 
  * @param str     Departure message.
  * @param timeout Wait timeout.
@@ -373,15 +386,18 @@ throws ControllerException
  * @throws InterruptedException 
  * @throws IOException 
  */
-private synchronized void waitForResponseStartingBy(String str, int timeout)
+private synchronized void waitForMessageStartingBy(int timeout)
 throws InterruptedException, IOException
 {
-   expectedResponseStart = str;
-   wait(timeout);
-
-   // Check response.
-   if (!(receivedResponse.startsWith(expectedResponseStart)))
-      throw new IOException("Timeout waiting for message starting by : " + str);
+   long endTime = System.currentTimeMillis() + timeout;
+   while ((receivedResponse == null) || !(receivedResponse.startsWith(expectedMessageStart)))
+   {
+      long cTime = System.currentTimeMillis();
+      if (cTime >= endTime)
+         throw new IOException("Timeout waiting for message starting by : " + expectedMessageStart);
+      
+      wait(endTime - cTime);
+   }
 }
 
 /**

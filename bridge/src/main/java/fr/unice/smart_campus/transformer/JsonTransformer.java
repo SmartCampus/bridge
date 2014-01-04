@@ -4,6 +4,7 @@ package fr.unice.smart_campus.transformer;
 import org.json.JSONObject;
 
 import fr.unice.smart_campus.data.SensorData;
+import fr.unice.smart_campus.data.SensorValue;
 
 /**
  * Transform miscellanous objects in a JSON format.
@@ -25,14 +26,14 @@ public SensorData toSensorData(String jStr)
 {
    // Build the JSON Object
    JSONObject jsonObject = new JSONObject(jStr);
-   
+
    // Build the sensor data from the JSON object.
    String name = jsonObject.getString("n");
    double value = jsonObject.getDouble("v");
    long time = 0;
    if (jsonObject.has("t"))
       time = jsonObject.getLong("t");
-   
+
    // Return the built result.
    return new SensorData(name, value, time);
 }
@@ -47,17 +48,39 @@ public SensorData toSensorData(String jStr)
  */
 public SensorData toSensorData(String jStr, String name)
 {
-    // Build the JSON Object
+   // Build the JSON Object
    JSONObject jsonObject = new JSONObject(jStr);
-   
+
    // Build the sensor data from the JSON object.
    double value = jsonObject.getDouble("v");
    long time = 0;
    if (jsonObject.has("t"))
       time = jsonObject.getLong("t");
-   
+
    // Return the built result.
    return new SensorData(name, value, time);
+}
+
+
+/**
+ * Build a sensor value from a string JSON format and a given name.
+ *  
+ * @param jStr Micro controller String received.
+ * @return     The SensorValue built from the string.
+ */
+public SensorValue toSensorValue(String jStr)
+{
+   // Build the JSON Object
+   JSONObject jsonObject = new JSONObject(jStr);
+
+   // Build the sensor data from the JSON object.
+   double value = jsonObject.getDouble("v");
+   long time = 0;
+   if (jsonObject.has("t"))
+      time = jsonObject.getLong("t");
+
+   // Return the built result.
+   return new SensorValue(value, time);
 }
 
 
@@ -72,9 +95,9 @@ public String toString(SensorData sd)
    // Build the JSON object.
    JSONObject obj = new JSONObject();
    obj.put("n", sd.getSensorName());
-   obj.put("v", sd.getValue());
-   obj.put("t", sd.getTime());
-   
+   obj.put("v", sd.getSensorValue());
+   obj.put("t", sd.getSensorTime());
+
    // Return the string.
    return obj.toString();
 }
@@ -90,9 +113,9 @@ public String toStringWithoutName(SensorData sd)
 {
    // Build the JSON object.
    JSONObject obj = new JSONObject();
-   obj.put("v", sd.getValue());
-   obj.put("t", sd.getTime());
-   
+   obj.put("v", sd.getSensorValue());
+   obj.put("t", sd.getSensorTime());
+
    // Return the string.
    return obj.toString();
 }

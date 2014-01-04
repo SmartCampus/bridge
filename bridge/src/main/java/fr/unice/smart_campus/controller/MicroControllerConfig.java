@@ -21,7 +21,7 @@ import fr.unice.smart_campus.data.SensorDescriptor;
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
  */
-class MicroControllerConfig
+public class MicroControllerConfig
 {
 
 /** Map of sensors descriptors */
@@ -29,6 +29,31 @@ private ArrayList<SensorDescriptor> sensorsDescriptions;
 
 /** Config file */
 private File configFile;
+
+
+/**
+ * List all the sensor in the configuration.
+ * 
+ * @return Return an array that gives all the sensors in the configuration.
+ */
+public SensorDescriptor[] getAllSensors()
+{
+   // Build the result.
+   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
+   sensorsDescriptions.toArray(res);
+   return res;
+}
+
+
+/**
+ * Get the configuration file.
+ * 
+ * @return The configuration file.
+ */
+public File getConfigFile()
+{
+   return configFile;
+}
 
 
 /**
@@ -92,20 +117,6 @@ throws IOException
    }
    
    writeToFile();
-}
-
-
-/**
- * List all the sensor in the configuration.
- * 
- * @return Return an array that gives all the sensors in the configuration.
- */
-SensorDescriptor[] getAllSensors()
-{
-   // Build the result.
-   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
-   sensorsDescriptions.toArray(res);
-   return res;
 }
 
 

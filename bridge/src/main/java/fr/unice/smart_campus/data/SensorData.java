@@ -1,7 +1,7 @@
 
 package fr.unice.smart_campus.data;
 
-
+import fr.unice.smart_campus.Utils;
 
 /**
  * Model the sensor data and informations, like name, time and sensor value.
@@ -10,13 +10,8 @@ package fr.unice.smart_campus.data;
  * @version 1.0.0
  */
 public class SensorData
+extends SensorValue
 {
-
-/** Sensor value */
-private double sensorValue;
-
-/** Time where the info is received */
-private long sensorTime;
 
 /** Sensor name */
 private String sensorName;
@@ -31,13 +26,9 @@ private String sensorName;
  */
 public SensorData(String name, double value, long time)
 {
+   super(value, time);
    sensorName = name;
-   sensorValue = value;
-   sensorTime = time;
 }
-
-
-
 
 
 /**
@@ -50,6 +41,7 @@ public String getSensorName()
    return sensorName;
 }
 
+
 /**
  * Set the sensor name.
  * 
@@ -58,49 +50,6 @@ public String getSensorName()
 public void setSensorName(String name)
 {
    sensorName = name;
-}
-
-
-/**
- * Get the sensor value.
- * 
- * @return Sensor value.
- */
-public double getValue()
-{
-   return sensorValue;
-}
-
-
-/**
- * Set the sensor value. 
- * 
- * @param value New sensor value.
- */
-public void setSensorValue(double value)
-{
-   sensorValue = value;
-}
-
-/**
- * Get the sensor update date.
- * 
- * @return Sensor update date.
- */
-public long getTime()
-{
-   return sensorTime;
-}
-
-
-/**
- * Set the new sensor time.
- * 
- * @param time the new sensor time.
- */
-public void setSensorTime(long time)
-{
-   sensorTime = time;
 }
 
 
@@ -116,7 +65,6 @@ public boolean equals(Object obj)
       return false;
    
    SensorData sd = (SensorData) obj;
-   return ((sensorTime == sd.sensorTime) && (sensorValue == sd.getValue()) && (sensorName.equals(sd.getSensorName())));
+   return ((super.equals(obj)) && (Utils.equals(sensorName, sd.sensorName))); 
 }
-
 }

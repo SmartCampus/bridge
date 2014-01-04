@@ -53,6 +53,6 @@ public void test02_SetAttributes()
    
    // Test the values.
    assertEquals("t1", data.getSensorName());
-   assertEquals(data.getTime(), System.currentTimeMillis());
+   assertEquals(data.getSensorTime(), System.currentTimeMillis());
 }
 }

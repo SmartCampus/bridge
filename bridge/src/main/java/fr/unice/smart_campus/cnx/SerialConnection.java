@@ -88,6 +88,7 @@ throws Exception
    // Open the streams.
    input = new BufferedReader(new InputStreamReader(port.getInputStream()));
    output = port.getOutputStream();
+   Thread.sleep(1000);
 
    // Add events on the serial port.
    port.addEventListener(new SerialPortEventListener()
@@ -99,6 +100,7 @@ throws Exception
       }
    });
    port.notifyOnDataAvailable(true);
+
 }
 
 
@@ -125,9 +127,10 @@ public void setConnectionListener(Listener listener)
  * @param str String to send.
  * 
  * @throws IOException IO error.
+ * @throws InterruptedException 
  */
-public synchronized void sendMessage(String str)
-throws IOException
+public void sendMessage(String str)
+throws IOException, InterruptedException
 {
    System.out.println("Send : " + str);
 
@@ -142,7 +145,7 @@ throws IOException
  * 
  * @param oEvent Event receives.
  */
-private synchronized void processReceivedEvent(SerialPortEvent oEvent)
+private void processReceivedEvent(SerialPortEvent oEvent)
 {
    if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
    {
@@ -157,7 +160,7 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
          System.out.println("Received line : " + inputLine);
 
          // Notify listener.
-         if (listener != null)
+         if ((listener != null) && (inputLine != null))
             listener.messageReceived(inputLine);
       }
       catch (Exception e)
@@ -172,7 +175,7 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
 /**
  * Close the connection.
  */
-public synchronized void close()
+public void close()
 {
    if (port != null)
    {

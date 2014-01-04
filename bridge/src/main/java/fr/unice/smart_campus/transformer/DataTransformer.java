@@ -2,6 +2,7 @@
 package fr.unice.smart_campus.transformer;
 
 import fr.unice.smart_campus.data.SensorData;
+import fr.unice.smart_campus.data.SensorValue;
 
 /**
  * Transform an input string into a SensorData.
@@ -28,6 +29,15 @@ public SensorData toSensorData(String receivedData);
  * @return           A sensor data built from the two String.
  */
 public SensorData toSensorData(String line, String sensorName);
+
+
+/**
+ * Build a sensor value from a string JSON format and a given name.
+ *  
+ * @param jStr Micro controller String received.
+ * @return     The SensorValue built from the string.
+ */
+public SensorValue toSensorValue(String jStr);
 
 
 /**

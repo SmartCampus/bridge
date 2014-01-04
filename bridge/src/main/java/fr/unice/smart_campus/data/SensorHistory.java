@@ -89,11 +89,11 @@ throws IOException
  * @throws IOException         IO error.
  * @throws ControllerException Sensor history data file does not exist.
  */
-public SensorData[] loadHistory(String sensorName)
+public SensorValue[] loadHistory(String sensorName)
 throws ControllerException, IOException
 {
    // Create the ArrayList of result.
-   ArrayList<SensorData> stockDatas = new ArrayList<SensorData>();
+   ArrayList<SensorValue> stockDatas = new ArrayList<SensorValue>();
 
    // Find the file corresponding to the name.
    File f = new File(rootDirectory, sensorName);
@@ -106,13 +106,13 @@ throws ControllerException, IOException
    {
       // Build the ArrayList of datas.
       String line = scanner.nextLine();
-      SensorData sd = transformer.toSensorData(line, sensorName);
-      stockDatas.add(sd);
+      SensorValue sv = transformer.toSensorValue(line);
+      stockDatas.add(sv);
    }
    scanner.close();
 
    // Build the result array.
-   SensorData[] res = new SensorData[stockDatas.size()];
+   SensorValue[] res = new SensorValue[stockDatas.size()];
    stockDatas.toArray(res);
    return res;
 }
@@ -129,23 +129,23 @@ throws ControllerException, IOException
  * @throws IOException         IO error.
  * @throws ControllerException Micro controller error.
  */
-public SensorData[] readData(long timeMin, long timeMax, String name)
+public SensorValue[] readData(long timeMin, long timeMax, String name)
 throws ControllerException, IOException
 {
    if ((timeMin > timeMax) || (timeMax < timeMin))
       throw new ControllerException("Invalid time.");
    
    // Sensor array result.
-   ArrayList<SensorData> result = new ArrayList<SensorData>();
+   ArrayList<SensorValue> result = new ArrayList<SensorValue>();
 
    // Get all the datas of the given sensor name.
-   SensorData[] allData = loadHistory(name);
+   SensorValue[] allData = loadHistory(name);
 
    // Build the result ArrayList.
-   for (SensorData sd : allData)
+   for (SensorValue sv : allData)
    {
-      while ((sd.getTime() >= timeMin) && (sd.getTime() <= timeMax))
-         result.add(sd);
+      while ((sv.getSensorTime() >= timeMin) && (sv.getSensorTime() <= timeMax))
+         result.add(sv);
    }
 
    // Build the result array.

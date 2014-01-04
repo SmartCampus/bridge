@@ -87,25 +87,12 @@ public void test03_Get_02()
 
 
 /**
- * Test the remove() method error, when an unknown sensor name is given.
- * 
- * @throws ControllerException Micro controller error. 
- */
-@Test(expected = ControllerException.class)
-public void test04_Remove_01()
-throws ControllerException
-{
-   repository.remove("test");
-}
-
-
-/**
  * Test the remove() method good execution.
  * 
  * @throws ControllerException Micro controller error.
  */
 @Test
-public void test04_Remove_02()
+public void test04_Remove()
 throws ControllerException
 {
    // Build the sensor data value. 

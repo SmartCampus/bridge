@@ -70,7 +70,7 @@ public void test02_ToSensorData_02()
    assertEquals("t1", sd.getSensorName());
    
    // Check time.
-   assertEquals(sd.getTime(), sd.getTime());
+   assertEquals(sd.getSensorTime(), sd.getSensorTime());
 }
 
 
@@ -91,7 +91,7 @@ public void test03_ToString_01()
 public void test03_ToString_02()
 {
    SensorData sd = transformer.toSensorData("{\"n\":\"" + "t1" + "\"," + "\"v\":" + 200 + "," + "\"t\":" + System.currentTimeMillis() + "}");
-   assertEquals("{\"v\":" + 200 + "," + "\"t\":" + sd.getTime() + "," + "\"n\":\"" + "t1\"" + "}", transformer.toString(sd));
+   assertEquals("{\"v\":" + 200 + "," + "\"t\":" + sd.getSensorTime() + "," + "\"n\":\"" + "t1\"" + "}", transformer.toString(sd));
 }
 
 
@@ -112,6 +112,6 @@ public void test04_ToStringWithoutName_01()
 public void test04_ToStringWithoutName_02()
 {
    SensorData sd = transformer.toSensorData("{\"n\":\"" + "t1" + "\"," + "\"v\":" + 200 + "," + "\"t\":" + System.currentTimeMillis() + "}");
-   assertEquals("{\"v\":" + 200 + "," + "\"t\":" + sd.getTime() + "}", transformer.toStringWithoutName(sd));
+   assertEquals("{\"v\":" + 200 + "," + "\"t\":" + sd.getSensorTime() + "}", transformer.toStringWithoutName(sd));
 }
 }
