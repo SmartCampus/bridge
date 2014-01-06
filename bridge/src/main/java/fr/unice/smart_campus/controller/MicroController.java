@@ -167,7 +167,7 @@ public synchronized void messageReceived(String msg)
 /**
  * Close the connection.
  */
-public synchronized void close()
+public void close()
 {
    connection.close();
 }
@@ -236,6 +236,8 @@ throws ControllerException
 public void changeSensorFrequency(String name, int freq)
 throws ControllerException
 {
+   if (freq < 0)
+      throw new ControllerException("Frequency has to be > to 0.");
    execCommand("freq " + name + " " + freq);
 }
 

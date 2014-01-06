@@ -41,7 +41,7 @@ throws Exception
 {
    for (int i = 0; i < 10; i++)
    {
-      ControllerConnection connection = new SerialConnection("COM3");
+      ControllerConnection connection = new SerialConnection(Constants.PORT_NAME);
       connection.close();
    }
 }
@@ -53,7 +53,7 @@ throws Exception
  * 
  * @throws Exception General error.
  */
-@Test
+/*@Test
 public void test02_AddAndRemove()
 throws Exception
 {
@@ -66,7 +66,7 @@ throws Exception
       microController.addSensor(new SensorDescriptor("t1", 2, 3));
       microController.deleteSensor("t1");
    }
-}
+}*/
 
 
 /**
