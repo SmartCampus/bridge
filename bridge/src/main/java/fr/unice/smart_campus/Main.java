@@ -48,7 +48,9 @@ throws Exception
    }
    
    MicroController ctrl = microControllers.get(0);
+   ctrl.resetController();
    ctrl.addSensor(new SensorDescriptor("t1 2 3"));
+   ctrl.addSensor(new SensorDescriptor("t2 4 5"));
 }
 
 
