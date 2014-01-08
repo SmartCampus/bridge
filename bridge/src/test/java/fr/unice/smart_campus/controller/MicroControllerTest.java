@@ -46,7 +46,7 @@ throws Exception
 {
    System.out.println();
    System.out.println("=========== BUILD MICRO CONTROLLER ===========");
-   
+
    // Build the test attributes.
    ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
    DataTransformer transformer = new JsonTransformer();
@@ -59,10 +59,15 @@ throws Exception
 
 /**
  * Close the connection after each test.
+ * 
+ * @throws InterruptedException Thread interrupted.
  */
 @After
 public void testEnd()
+throws InterruptedException
 {
+   Thread.sleep(500);
+   System.out.println("=========== CLOSING CONNECTION ===========");
    microController.close();
 }
 
@@ -157,7 +162,7 @@ throws ControllerException
 {
    SensorDescriptor[] array = microController.getAllSensors();
    assertEquals(0, array.length);
-   
+
    // Execute the commands.
    microController.addSensor(new SensorDescriptor("t1 2 3"));
    microController.addSensor(new SensorDescriptor("t2 7 5"));
@@ -322,10 +327,10 @@ throws ControllerException
 {
    // Add a sensor to the micro controller.
    microController.addSensor(new SensorDescriptor("t1 2 3"));
-   
+
    // Reset the micro controller.
    microController.resetController();
-   
+
    // Check if the reset was effective.
    SensorDescriptor[] sensorArray = microController.getAllSensors();
    assertEquals(0, sensorArray.length);

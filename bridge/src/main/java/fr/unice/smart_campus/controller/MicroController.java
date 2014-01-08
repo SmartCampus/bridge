@@ -139,6 +139,7 @@ throws ControllerException
    // Build the response string.
    String response = receivedResponse.substring(2).trim();
    System.out.println("|MicroController.java->execCommand|:Response: " + response);
+   System.out.flush();
    if (!(response.startsWith("0")))
       throw new ControllerException(response);
 

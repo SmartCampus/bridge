@@ -204,7 +204,6 @@ throws IOException
    if ((c < 0) && (cnx == 0))
       return null;
 
-   System.out.println(line);
    return new String(line, 0, cnx);
 }
 }

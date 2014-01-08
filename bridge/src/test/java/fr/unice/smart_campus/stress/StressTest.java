@@ -53,7 +53,7 @@ throws Exception
  * 
  * @throws Exception General error.
  */
-@Test
+/*@Test
 public void test02_AddAndRemove()
 throws Exception
 {
@@ -67,7 +67,7 @@ throws Exception
       microController.deleteSensor("t1");
       System.out.println("Error number : " + microController.getCommandError());
    }
-}
+}*/
 
 
 /**
