@@ -6,9 +6,8 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
@@ -35,11 +34,8 @@ private static final int TIME_OUT = 2000;
 /** Default bits per second for CMD port */
 private static final int DATA_RATE = 9600;
 
-/**
- *  Convert the bytes received by a InputStreamReader into
- *  characters and displayed them. 
- */
-private BufferedReader input;
+/** Input stream */
+private InputStream input;
 
 /** The output stream to the port */
 private OutputStream output;
@@ -86,7 +82,7 @@ throws Exception
    port.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
    // Open the streams.
-   input = new BufferedReader(new InputStreamReader(port.getInputStream()));
+   input = port.getInputStream();
    output = port.getOutputStream();
    Thread.sleep(1000);
 
@@ -141,22 +137,32 @@ throws IOException, InterruptedException
 
 
 /**
+ * Close the connection.
+ */
+public void close()
+{
+   if (port != null)
+   {
+      port.close();
+      port = null;
+      input = null;
+   }
+}
+
+
+/**
  * Handle input event on the serial port.
  * 
  * @param oEvent Event receives.
  */
-private void processReceivedEvent(SerialPortEvent oEvent)
+private synchronized void processReceivedEvent(SerialPortEvent oEvent)
 {
    if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
    {
       try
       {
          // Wait input to be ready (mandatory, exception o/w).
-         while (!input.ready())
-         {
-            Thread.sleep(1);
-         }
-         String inputLine = input.readLine();
+         String inputLine = readLine(input);
          System.out.println("Received line : " + inputLine);
 
          // Notify listener.
@@ -173,15 +179,32 @@ private void processReceivedEvent(SerialPortEvent oEvent)
 
 
 /**
- * Close the connection.
+ * Read the line.
+ * 
+ * @param inputStream Input stream to read.
+ * @return            The read line, null if end of stream.
+ * 
+ * @throws IOException 
  */
-public void close()
+private String readLine(InputStream inputStream)
+throws IOException
 {
-   if (port != null)
+   char line[] = new char[1000];
+   int cnx = 0;
+   int c;
+
+   while ((c = inputStream.read()) >= 0)
    {
-      port.close();
-      port = null;
-      input = null;
+      if (c == '\n')
+         break;
+      if (c != '\r')
+         line[cnx++] = (char) c;
    }
+
+   if ((c < 0) && (cnx == 0))
+      return null;
+
+   System.out.println(line);
+   return new String(line, 0, cnx);
 }
 }

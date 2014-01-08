@@ -53,7 +53,7 @@ throws Exception
  * 
  * @throws Exception General error.
  */
-/*@Test
+@Test
 public void test02_AddAndRemove()
 throws Exception
 {
@@ -65,8 +65,9 @@ throws Exception
       System.out.println("Loop : " + i);
       microController.addSensor(new SensorDescriptor("t1", 2, 3));
       microController.deleteSensor("t1");
+      System.out.println("Error number : " + microController.getCommandError());
    }
-}*/
+}
 
 
 /**

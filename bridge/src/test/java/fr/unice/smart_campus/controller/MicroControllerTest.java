@@ -44,6 +44,9 @@ private MicroController microController;
 public void testSetup()
 throws Exception
 {
+   System.out.println();
+   System.out.println("=========== BUILD MICRO CONTROLLER ===========");
+   
    // Build the test attributes.
    ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
    DataTransformer transformer = new JsonTransformer();

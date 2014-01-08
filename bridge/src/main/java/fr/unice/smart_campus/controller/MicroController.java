@@ -24,6 +24,9 @@ public class MicroController
 implements ControllerConnection.Listener
 {
 
+/** Number of command */
+private int commandError = 0;
+
 /** Connection to the micro controller */
 private ControllerConnection connection;
 
@@ -93,6 +96,17 @@ public MicroControllerConfig getConfig()
 
 
 /**
+ * Get the number of command errors.
+ * 
+ * @return Number of command errors.
+ */
+public int getCommandError()
+{
+   return commandError;
+}
+
+
+/**
  * Request command execution to the micro controller.
  * 
  * @param cmd Command to execute.
@@ -124,6 +138,7 @@ throws ControllerException
 
    // Build the response string.
    String response = receivedResponse.substring(2).trim();
+   System.out.println("|MicroController.java->execCommand|:Response: " + response);
    if (!(response.startsWith("0")))
       throw new ControllerException(response);
 
@@ -154,6 +169,7 @@ public synchronized void messageReceived(String msg)
    if (msg.startsWith(expectedMessageStart))
    {
       receivedResponse = msg;
+      System.out.println("|MicroController.java->messageReceived|: recieved response : " + receivedResponse);
       notify();
    }
 
@@ -209,7 +225,8 @@ throws ControllerException
 {
    // Execute the del command. 
    execCommand("del " + name);
-
+   System.out.println("Delete : " + name);
+   
    // Remove last sensor data from repository.
    sensorRepository.remove(name);
 
@@ -288,7 +305,6 @@ throws ControllerException
 {
    // Get list of sensors names.
    String lsensors = execCommand("listsensors");
-
    // Build array of sensor descriptors.
    ArrayList<SensorDescriptor> sensorArray = new ArrayList<SensorDescriptor>();
    StringTokenizer tkz = new StringTokenizer(lsensors, " ");
@@ -299,6 +315,7 @@ throws ControllerException
    SensorDescriptor[] res = new SensorDescriptor[sensorArray.size()];
    sensorArray.toArray(res);
    return res;
+
 }
 
 
@@ -397,7 +414,7 @@ throws InterruptedException, IOException
       long cTime = System.currentTimeMillis();
       if (cTime >= endTime)
          throw new IOException("Timeout waiting for message starting by : " + expectedMessageStart);
-      
+
       wait(endTime - cTime);
    }
 }

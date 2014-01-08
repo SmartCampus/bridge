@@ -11,7 +11,7 @@ import java.util.Scanner;
 import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
- * This class manage the history of sensor values for all sensors of one Arduino. 
+ * This class manage the history of sensor values for all sensors of one micro controller. 
  * 
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
