@@ -226,7 +226,6 @@ throws ControllerException
 {
    // Execute the del command. 
    execCommand("del " + name);
-   System.out.println("Delete : " + name);
    
    // Remove last sensor data from repository.
    sensorRepository.remove(name);

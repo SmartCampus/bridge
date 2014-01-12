@@ -66,7 +66,6 @@ throws Exception
 public void testEnd()
 throws InterruptedException
 {
-   Thread.sleep(500);
    System.out.println("=========== CLOSING CONNECTION ===========");
    microController.close();
 }

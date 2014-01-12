@@ -32,7 +32,7 @@ private String portName;
 private static final int TIME_OUT = 2000;
 
 /** Default bits per second for CMD port */
-private static final int DATA_RATE = 9600;
+private static final int DATA_RATE = 115200;
 
 /** Input stream */
 private InputStream input;
@@ -132,6 +132,7 @@ throws IOException, InterruptedException
 
    // Send the command.
    output.write(str.getBytes());
+   output.write('\n');
    output.flush();
 }
 
@@ -189,8 +190,7 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
 private String readLine(InputStream inputStream)
 throws IOException
 {
-   char line[] = new char[1000];
-   int cnx = 0;
+   StringBuilder line = new StringBuilder();
    int c;
 
    while ((c = inputStream.read()) >= 0)
@@ -198,12 +198,12 @@ throws IOException
       if (c == '\n')
          break;
       if (c != '\r')
-         line[cnx++] = (char) c;
+         line.append((char) c);
    }
 
-   if ((c < 0) && (cnx == 0))
+   if ((c < 0) && (line.length() == 0))
       return null;
 
-   return new String(line, 0, cnx);
+   return line.toString();
 }
 }
