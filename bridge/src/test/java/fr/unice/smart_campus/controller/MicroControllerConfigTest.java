@@ -15,6 +15,7 @@ import org.junit.runners.MethodSorters;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
@@ -32,7 +33,7 @@ public class MicroControllerConfigTest
 {
 
 /** Micro controller */
-private MicroController microController;
+private MicroControllerArduino microController;
 
 
 /**
@@ -162,6 +163,6 @@ throws Exception
    DataTransformer transformer = new JsonTransformer();
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
    File rootDir = new File("ControllerDatas");
-   microController = new MicroController(connection, transformer, repository, rootDir);
+   microController = new MicroControllerArduino(connection, transformer, repository, rootDir);
 }
 }

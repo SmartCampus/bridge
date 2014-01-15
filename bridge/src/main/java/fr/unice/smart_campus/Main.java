@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
-import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.transformer.DataTransformer;
@@ -22,7 +22,7 @@ public class Main
 {
 
 /** List of all the Micro Controller plugged on the board. */
-private static ArrayList<MicroController> microControllers = new ArrayList<MicroController>();
+private static ArrayList<MicroControllerArduino> microControllers = new ArrayList<MicroControllerArduino>();
 
 
 /**
@@ -47,7 +47,7 @@ throws Exception
       microControllers.add(createMicroController(n, programConfig));
    }
    
-   MicroController ctrl = microControllers.get(0);
+   MicroControllerArduino ctrl = microControllers.get(0);
    ctrl.resetController();
    ctrl.addSensor(new SensorDescriptor("t1 2 3"));
    ctrl.addSensor(new SensorDescriptor("t2 4 5"));
@@ -60,7 +60,7 @@ throws Exception
  * @return The micro controller created.
  * @throws Exception 
  */
-private static MicroController createMicroController(String name, Configuration config)
+private static MicroControllerArduino createMicroController(String name, Configuration config)
 throws Exception
 {
    // Build the data root directory.
@@ -88,6 +88,6 @@ throws Exception
    else
        throw new Exception("Connection type : " + connectionType + " unknown.");
    
-   return new MicroController(connection, transformer, new CurrentSensorDataRepository(), rootDir);
+   return new MicroControllerArduino(connection, transformer, new CurrentSensorDataRepository(), rootDir);
 }
 }

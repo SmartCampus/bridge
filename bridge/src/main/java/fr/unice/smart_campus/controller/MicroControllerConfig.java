@@ -32,31 +32,6 @@ private File configFile;
 
 
 /**
- * List all the sensor in the configuration.
- * 
- * @return Return an array that gives all the sensors in the configuration.
- */
-public SensorDescriptor[] getAllSensors()
-{
-   // Build the result.
-   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
-   sensorsDescriptions.toArray(res);
-   return res;
-}
-
-
-/**
- * Get the configuration file.
- * 
- * @return The configuration file.
- */
-public File getConfigFile()
-{
-   return configFile;
-}
-
-
-/**
  * Default constructor.
  * 
  * @param controller Controller currently in use.
@@ -65,7 +40,7 @@ public File getConfigFile()
  * @throws IOException         IO Error.
  * @throws ControllerException Micro controller error.
  */
-MicroControllerConfig(File file)
+public MicroControllerConfig(File file)
 throws ControllerException, IOException
 {
    // Build variables.
@@ -81,13 +56,56 @@ throws ControllerException, IOException
 
 
 /**
+ * Get a sensor in the configuration from its name.
+ * 
+ * @param sensorName Name of the sensor.
+ * @return           The sensor descriptor linked to the name, null if none.
+ */
+public SensorDescriptor getSensor(String sensorName)
+{
+   for (SensorDescriptor sd : sensorsDescriptions)
+   {
+      if (sensorName == sd.getSensorName())
+         return sd;
+   }
+   
+   return null;
+}
+
+
+/**
+ * Get the configuration file.
+ * 
+ * @return The configuration file.
+ */
+public File getConfigFile()
+{
+   return configFile;
+}
+
+
+/**
+ * List all the sensor in the configuration.
+ * 
+ * @return Return an array that gives all the sensors in the configuration.
+ */
+public SensorDescriptor[] getAllSensors()
+{
+   // Build the result.
+   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
+   sensorsDescriptions.toArray(res);
+   return res;
+}
+
+
+/**
  * Add a new sensor to configuration repository.
  * 
  * @param sensor Sensor to add.
  * 
  * @throws IOException IO error.
  */
-void addSensor(SensorDescriptor sensor)
+public void addSensor(SensorDescriptor sensor)
 throws IOException
 {
    sensorsDescriptions.add(sensor);
@@ -102,7 +120,7 @@ throws IOException
  * 
  * @throws IOException IO error.
  */
-void delSensor(String name)
+public void delSensor(String name)
 throws IOException
 {
    // Remove sensor from configuration.
@@ -123,7 +141,7 @@ throws IOException
 /**
  * Clear the configuration.
  */
-void clear()
+public void clear()
 {
    sensorsDescriptions.clear();
 }

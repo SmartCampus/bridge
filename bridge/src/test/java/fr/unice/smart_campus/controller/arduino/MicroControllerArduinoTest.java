@@ -1,5 +1,5 @@
 
-package fr.unice.smart_campus.controller;
+package fr.unice.smart_campus.controller.arduino;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,6 +15,7 @@ import org.junit.runners.MethodSorters;
 import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
@@ -28,11 +29,11 @@ import fr.unice.smart_campus.transformer.JsonTransformer;
  * @version 1.0.0
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MicroControllerTest
+public class MicroControllerArduinoTest
 {
 
 /** Micro controller */
-private MicroController microController;
+private MicroControllerArduino microController;
 
 
 /**
@@ -51,8 +52,8 @@ throws Exception
    ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
    DataTransformer transformer = new JsonTransformer();
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
-   File rootDir = new File(Constants.DATA_PATH);
-   microController = new MicroController(connection, transformer, repository, rootDir);
+   File rootDir = new File(Constants.ARDUINO_DATA_PATH);
+   microController = new MicroControllerArduino(connection, transformer, repository, rootDir);
    microController.resetController();
 }
 
@@ -190,6 +191,20 @@ throws ControllerException
    // Execute the commands.
    microController.addSensor(new SensorDescriptor("t1 2 3"));
    microController.addSensor(new SensorDescriptor("t1 3 4"));
+}
+
+
+/**
+ * Test.
+ * @throws ControllerException 
+ */
+@Test
+public void test05_CommandAdd_05()
+throws ControllerException
+{
+   // Execute the commands.
+   microController.addSensor(new SensorDescriptor("t1 2 3"));
+   microController.addSensor(new SensorDescriptor("t1 2 3"));
 }
 
 
