@@ -127,6 +127,23 @@ public String getRepositoryDataFormat()
 
 
 /**
+ * Get the Phidget serial number.
+ * 
+ * @param name Phidget controller name.
+ * 
+ * @return The Phidget serial number.
+ */
+public int getPhidgetSerialNumber(String name)
+{
+   // Get the phidget controller.
+   JSONObject controller = getController(name);
+   
+   // Return the phidget controller serial number.
+   return controller.getInt("serial");
+}
+
+
+/**
  * Get a controller from his name.
  * 
  * @param controllerName Controller to get.

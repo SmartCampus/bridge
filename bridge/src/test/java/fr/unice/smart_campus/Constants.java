@@ -14,8 +14,14 @@ public class Constants
 public static final String PORT_NAME = "COM5";
 
 /** Arduino data file path */
-public static final String ARDUINO_DATA_PATH = "ControllerDatas";
+public static final String ARDUINO_DATA_PATH = "ControllerDatas/Arduino";
 
 /** Phidget data file path */
 public static final String PHIDGET_DATA_PATH = "ControllerDatas/Phidget";
+
+/** Arduino configuration file path */
+public static final String ARDUINO_CONFIG_PATH = "Test/Config/arduinoConfig.cfg";
+
+/** Phidget configuration file path */
+public static final String PHIDGET_CONFIG_PATH = "Test/Config/phidgetConfig.cfg";
 }

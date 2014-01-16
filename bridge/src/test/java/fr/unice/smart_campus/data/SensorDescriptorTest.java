@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.data;
 
 import static org.junit.Assert.*;
@@ -18,13 +19,16 @@ public class SensorDescriptorTest
 
 /**
  * Frist constructor good execution test.
+ * 
+ * @throws ControllerException Controller error.
  */
 @Test
 public void test01_Constructor_01()
+throws ControllerException
 {
    // Build the sensor descriptor.
    SensorDescriptor sd = new SensorDescriptor("t1", 2, 3);
-   
+
    // Test the values.
    assertEquals("t1", sd.getSensorName());
    assertEquals(2, sd.getPinNumber());
@@ -40,7 +44,7 @@ public void test01_Constructor_02()
 {
    // Build the sensor descriptor from a string.
    SensorDescriptor sd = new SensorDescriptor("t1 2 3");
-   
+
    // Test the values.
    assertEquals("t1", sd.getSensorName());
    assertEquals(2, sd.getPinNumber());

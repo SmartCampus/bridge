@@ -49,7 +49,6 @@ throws ControllerException, IOException
    // Build the directory path.
    configFile = file;
    configFile.getParentFile().mkdirs();
-   
 
    loadConfig();
 }
@@ -61,14 +60,32 @@ throws ControllerException, IOException
  * @param sensorName Name of the sensor.
  * @return           The sensor descriptor linked to the name, null if none.
  */
-public SensorDescriptor getSensor(String sensorName)
+public SensorDescriptor getSensorFromName(String sensorName)
 {
    for (SensorDescriptor sd : sensorsDescriptions)
    {
-      if (sensorName == sd.getSensorName())
+      if (sensorName.equals(sd.getSensorName()))
          return sd;
    }
-   
+
+   return null;
+}
+
+
+/**
+ * Get a sensor in the configuration from its pin number.
+ * 
+ * @param pinNumber The sensor pin number.
+ * @return          The sensor descriptor linked to the pin number, null if none.
+ */
+public SensorDescriptor getSensorFromPin(int pinNumber)
+{
+   for (SensorDescriptor sd : sensorsDescriptions)
+   {
+      if (pinNumber == sd.getPinNumber())
+         return sd;
+   }
+
    return null;
 }
 
@@ -104,12 +121,19 @@ public SensorDescriptor[] getAllSensors()
  * @param sensor Sensor to add.
  * 
  * @throws IOException IO error.
+ * @throws ControllerException 
  */
 public void addSensor(SensorDescriptor sensor)
-throws IOException
+throws IOException, ControllerException
 {
-   sensorsDescriptions.add(sensor);
-   writeToFile();
+   if (!(sensorsDescriptions.contains(sensor)))
+   {
+      sensorsDescriptions.add(sensor);
+      writeToFile();
+      return;
+   }
+
+   throw new ControllerException("The sensor : " + sensor.getSensorName() + " is already in configuration.");
 }
 
 
@@ -124,7 +148,7 @@ public void delSensor(String name)
 throws IOException
 {
    // Remove sensor from configuration.
-   for (int i = sensorsDescriptions.size() - 1; i >= 0 ;i--)
+   for (int i = sensorsDescriptions.size() - 1; i >= 0; i--)
    {
       SensorDescriptor sd = sensorsDescriptions.get(i);
       if (sd.getSensorName().equals(name))
@@ -133,7 +157,7 @@ throws IOException
          break;
       }
    }
-   
+
    writeToFile();
 }
 
@@ -145,6 +169,7 @@ public void clear()
 {
    sensorsDescriptions.clear();
 }
+
 
 /**
  * Write the config into a file. 
