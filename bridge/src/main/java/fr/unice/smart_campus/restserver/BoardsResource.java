@@ -24,17 +24,18 @@ public class BoardsResource extends ServerResource {
 	@Get
 	public String getBoards(){
 		JSONArray arr = new JSONArray();
-		
+
 		for (MicroController mc : Main.getMicroControllers()){
 			JSONObject obj;
 			try {
-				//obj = new JSONObject().put("id", mc.getBoardId());
-				obj = new JSONObject().put("id", "Todo"); //TODO: getBoardId
+				obj = new JSONObject().put("id", mc.getBoardId());
 				arr.put(obj);
 			} catch (JSONException e) {
 				e.printStackTrace();
+			} catch (ControllerException e) {
+				e.printStackTrace();
 			}
-			
+
 		}
 		return new JSONObject().put("boards", arr).toString();
 	}

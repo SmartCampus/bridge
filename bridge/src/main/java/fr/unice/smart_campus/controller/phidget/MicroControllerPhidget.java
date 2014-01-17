@@ -195,6 +195,10 @@ throws ControllerException
    return sd;
 }
 
+public String getBoardId() throws ControllerException {
+	// TODO Implement getBoardId logic for Phidgets + Javadoc
+	return null;
+}
 
 public SensorDescriptor[] getAllSensors()
 throws ControllerException
@@ -325,4 +329,7 @@ throws PhidgetException
    ik.waitForAttachment();
    return ik;
 }
+
+
+
 }

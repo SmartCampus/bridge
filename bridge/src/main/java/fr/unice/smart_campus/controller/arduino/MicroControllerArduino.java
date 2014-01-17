@@ -248,6 +248,13 @@ throws ControllerException
 }
 
 
+public String getBoardId() 
+throws ControllerException 
+{
+	String response = execCommand("boardid");
+	
+	return response;
+}
 /* (non-Javadoc)
  * @see fr.unice.smart_campus.controller.MicroController#getSensorInformation(java.lang.String)
  */
@@ -397,6 +404,9 @@ throws InterruptedException, IOException
       wait(endTime - cTime);
    }
 }
+
+
+
 
 /**
  * Test main.

@@ -76,4 +76,14 @@ throws ControllerException;
 public abstract SensorDescriptor[] getAllSensors()
 throws ControllerException;
 
+/**
+ * Get the board Id
+ * 
+ * @return Return board Id
+ * 
+ * @throws ControllerException
+ */
+public abstract String getBoardId()
+throws ControllerException;
+
 }

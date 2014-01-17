@@ -1,6 +1,8 @@
 
 package fr.unice.smart_campus.transformer;
 
+import java.util.Map;
+
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorValue;
 
