@@ -195,20 +195,6 @@ throws ControllerException
 
 
 /**
- * Test.
- * @throws ControllerException 
- */
-@Test
-public void test05_CommandAdd_05()
-throws ControllerException
-{
-   // Execute the commands.
-   microController.addSensor(new SensorDescriptor("t1 2 3"));
-   microController.addSensor(new SensorDescriptor("t1 2 3"));
-}
-
-
-/**
  * Testing the delete command failure, when an inexisting sensor is given.
  * 
  * @throws ControllerException  Micro controller error.

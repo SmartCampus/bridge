@@ -65,7 +65,6 @@ throws Exception
       System.out.println("Loop : " + i);
       microController.addSensor(new SensorDescriptor("t1", 2, 3));
       microController.deleteSensor("t1");
-      System.out.println("Error number : " + microController.getCommandError());
    }
 }
 

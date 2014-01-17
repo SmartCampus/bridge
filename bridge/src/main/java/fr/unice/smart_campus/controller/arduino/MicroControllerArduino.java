@@ -26,9 +26,6 @@ public class MicroControllerArduino
 implements ControllerConnection.Listener, MicroController
 {
 
-/** Number of command error */
-private int commandError = 0;
-
 /** Connection to the micro controller */
 private ControllerConnection connection;
 
@@ -94,17 +91,6 @@ throws InterruptedException, IOException, ControllerException
 public MicroControllerConfig getConfig()
 {
    return configuration;
-}
-
-
-/**
- * Get the number of command errors.
- * 
- * @return Number of command errors.
- */
-public int getCommandError()
-{
-   return commandError;
 }
 
 

@@ -1,8 +1,6 @@
 
 package fr.unice.smart_campus.data;
 
-import java.util.Timer;
-
 import fr.unice.smart_campus.Utils;
 
 /**
@@ -18,8 +16,6 @@ extends SensorValue
 /** Sensor name */
 private String sensorName;
 
-/** Sensor timer */
-private Timer sensorTimer;
 
 /**
  * Default constructor.
@@ -54,17 +50,6 @@ public String getSensorName()
 public void setSensorName(String name)
 {
    sensorName = name;
-}
-
-
-/**
- * Set the sensor timer.
- * 
- * @param newTimer New sensor timer. 
- */
-public void setSensorTimer(Timer newTimer)
-{
-   sensorTimer = newTimer;
 }
 
 
