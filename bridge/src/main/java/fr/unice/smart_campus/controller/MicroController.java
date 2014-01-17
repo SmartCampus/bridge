@@ -258,7 +258,20 @@ throws ControllerException
    execCommand("freq " + name + " " + freq);
 }
 
-
+/**
+ * Get board id
+ * 
+ * @return The Board id
+ * 
+ * @throws ControllerException Command error
+ */
+public String getBoardId()
+throws ControllerException
+{
+	String response = execCommand("boardid");
+	
+	return response;
+}
 /**
  * Get all information about a sensor.
  * 
