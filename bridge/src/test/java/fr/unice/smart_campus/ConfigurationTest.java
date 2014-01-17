@@ -154,7 +154,7 @@ public void test05_GetControllerDataFormat_02()
 public void test06_GetDataStoragePath()
 {
    String dataStoragePath = config.getDataStoragePath();
-   assertEquals("ControllerDatas", dataStoragePath);
+   assertEquals("Test/ControllerData/Arduino", dataStoragePath);
 }
 
 

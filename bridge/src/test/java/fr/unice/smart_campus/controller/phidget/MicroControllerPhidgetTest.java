@@ -70,7 +70,7 @@ throws ControllerException, IOException, PhidgetException
 
 
 /**
- * Close th Phidget after each tests.
+ * Close the Phidget board after each tests.
  */
 @After
 public void testEnd()
@@ -130,10 +130,12 @@ throws ControllerException
    SensorDescriptor sd = new SensorDescriptor("t1", 2, 3);
    controller.addSensor(sd);
    assertNotNull(controller.getConfiguration().getSensorFromName("t1").equals(sd));
+   assertNotNull(controller.getSensorTimerRepository().get("t1"));
 
    // Delete the sensor.
    controller.deleteSensor("t1");
    assertNull(controller.getConfiguration().getSensorFromName("t1"));
+   assertNull(controller.getSensorTimerRepository().get("t1"));
 }
 
 
@@ -149,13 +151,13 @@ throws ControllerException
    // Add two sensors to the configuration.
    controller.addSensor(new SensorDescriptor("t1", 2, 3));
    controller.addSensor(new SensorDescriptor("t2", 3, 4));
-   
+
    // Check if the configuration is not null.
    SensorDescriptor[] sensorTab = controller.getAllSensors();
    assertNotNull(sensorTab);
    assertEquals(2, sensorTab.length);
    assertEquals("t1", sensorTab[0].getSensorName());
-   
+
 }
 
 
@@ -167,5 +169,44 @@ public void test05_GetConfiguration()
 {
    MicroControllerConfig config = controller.getConfiguration();
    assertNotNull(config);
+}
+
+
+/**
+ * Test the getSensorInformation() method good execution.
+ * 
+ * @throws ControllerException Controller error.
+ */
+@Test
+public void test06_GetSensorInformation()
+throws ControllerException
+{
+   // Add a new sensor to the controller.
+   controller.addSensor(new SensorDescriptor("t1", 2, 3));
+
+   // Get sensor information.
+   SensorDescriptor info = controller.getSensorInformation("t1");
+   assertNotNull(info);
+   assertEquals("t1", info.getSensorName());
+   assertEquals(2, info.getPinNumber());
+   assertEquals(3, info.getFrequency());
+}
+
+
+/**
+ * Test the resetController() method good execution.
+ * 
+ * @throws ControllerException Controller error.
+ */
+@Test
+public void test07_ResetController()
+throws ControllerException
+{
+   // Add a new sensor to the controller.
+   controller.addSensor(new SensorDescriptor("t1", 2, 3));
+   
+   // Reset the micro controller board.
+   controller.resetController();
+   assertEquals(0, controller.getConfiguration().getAllSensors().length);
 }
 }

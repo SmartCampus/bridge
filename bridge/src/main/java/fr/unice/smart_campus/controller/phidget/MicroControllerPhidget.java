@@ -4,8 +4,6 @@ package fr.unice.smart_campus.controller.phidget;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.phidgets.InterfaceKitPhidget;
 import com.phidgets.Phidget;
@@ -30,6 +28,8 @@ import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
+import fr.unice.smart_campus.data.SensorTimerRepository;
+import fr.unice.smart_campus.data.SensorTimerRepository.MyTimerTask;
 import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
@@ -56,6 +56,9 @@ private SensorHistory history;
 
 /** Phidgets interface kit */
 private InterfaceKitPhidget phidgetBoard;
+
+/** Sensor timer repository */
+private SensorTimerRepository timerRepository;
 
 /** Data transformer */
 private DataTransformer transformer;
@@ -85,6 +88,7 @@ throws ControllerException, IOException, PhidgetException
    transformer = trans;
    history = new SensorHistory(new File(rdir, "History"), transformer);
    phidgetBoard = open(phidgetSerial);
+   timerRepository = new SensorTimerRepository(this);
 }
 
 
@@ -96,6 +100,28 @@ throws ControllerException, IOException, PhidgetException
 public MicroControllerConfig getConfiguration()
 {
    return configuration;
+}
+
+
+/**
+ * Get the Phidget interface kit.
+ * 
+ * @return The phidget interface kit.
+ */
+public InterfaceKitPhidget getPhidget()
+{
+   return phidgetBoard;
+}
+
+
+/**
+ * Get the sensor timer repostiory.
+ * 
+ * @return The sensor timer repository.
+ */
+public SensorTimerRepository getSensorTimerRepository()
+{
+   return timerRepository;
 }
 
 
@@ -124,27 +150,9 @@ throws ControllerException
       // Add the sensor to the configuration.
       configuration.addSensor(sd);
 
-      // Add sensor value to history.
-     /* final SensorDescriptor stock = sd;
-      final Timer phidgetTimer =  new Timer();
-      phidgetTimer.scheduleAtFixedRate(new TimerTask()
-      {
-         @Override
-         public synchronized void run()
-         {
-            try
-            {
-               SensorData data = new SensorData(stock.getSensorName(), phidgetBoard.getSensorValue(stock.getPinNumber()), System.currentTimeMillis());
-               data.setSensorTimer(phidgetTimer);
-               repository.addData(data);
-               history.addData(data);
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
-      }, 10, sd.getFrequency());*/
+      // Add a new sensor task.
+      timerRepository.put(sd.getSensorName(), new MyTimerTask(sd));
+
    }
    catch (IOException e)
    {
@@ -153,10 +161,16 @@ throws ControllerException
 }
 
 
+/**
+ * Delete a sensor from the micro controller board.
+ * 
+ * @param name Name of the sensor to delete.
+ */
 public void deleteSensor(String name)
 throws ControllerException
 {
    repository.remove(name);
+   timerRepository.remove(name);
    try
    {
       configuration.delSensor(name);
@@ -168,6 +182,12 @@ throws ControllerException
 }
 
 
+/**
+ * Change the data refrh rate of a sensor. 
+ * 
+ * @param name Name of the sensor to change the refresh rate.
+ * @param freq New sensor frequency.
+ */
 public void changeSensorFrequency(String name, int freq)
 throws ControllerException
 {
@@ -178,12 +198,18 @@ throws ControllerException
 
    // Change sensor frequency.
    sd.setFrequency(freq);
-
-   // Change frequency in the phidget.
-   // phidgetBoard.setDataRate(sd.getPinNumber(), freq);
+   
+   // Change timer frequency.
+   timerRepository.changeTimerFrequency(name, freq);
 }
 
 
+/**
+ * Get al the information about a sensor.
+ * 
+ * @param name Name of the sensor to get the information.
+ * @return     Sensor information (pin number, name and frequency.
+ */
 public SensorDescriptor getSensorInformation(String name)
 throws ControllerException
 {
@@ -196,6 +222,11 @@ throws ControllerException
 }
 
 
+/**
+ * Get all the sensor currently plugged on the Phidget board.
+ * 
+ * @return All the sensor plugged on the board.
+ */
 public SensorDescriptor[] getAllSensors()
 throws ControllerException
 {
@@ -204,18 +235,47 @@ throws ControllerException
 
 
 /**
- * Close the phidget board.
+ * Reset the board by removing all the sensor plugged on it.
+ */
+public void resetController()
+{
+   // Clear configuration, repository and timer repository.
+   configuration.clear();
+   repository.clear();
+   timerRepository.clear();
+}
+
+
+/**
+ * Close the phidget board and the timer repository.
  */
 public void close()
 {
    try
    {
       phidgetBoard.close();
+      timerRepository.close();
    }
    catch (PhidgetException e)
    {
       e.printStackTrace();
    }
+}
+
+
+/**
+ * Refresh sensor data.
+ * 
+ * @param data Sensor data to refresh.
+ * 
+ * @throws IOException IO error. 
+ */
+public void refreshSensorData(SensorData data)
+throws IOException
+{
+   // Add data to the repository and to the history.
+   repository.addData(data);
+   history.addData(data);
 }
 
 
