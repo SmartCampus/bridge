@@ -18,7 +18,6 @@ import com.phidgets.PhidgetException;
 import fr.unice.smart_campus.Configuration;
 import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
-import fr.unice.smart_campus.data.SensorTimerRepository.MyTimerTask;
 import fr.unice.smart_campus.transformer.DataTransformer;
 import fr.unice.smart_campus.transformer.JsonTransformer;
 
@@ -100,7 +99,7 @@ public void test02_Put_01()
 throws ControllerException
 {
    // Put null values in the repository.
-   repository.put(null, null);
+   repository.startRefresh(null);
 }
 
 
@@ -114,13 +113,10 @@ public void test02_Put_02()
 throws ControllerException
 {
    // Put a value in the repository.
-   MyTimerTask t = new MyTimerTask(new SensorDescriptor("t1", 2, 3));
-   repository.put("t1", t);
+   SensorDescriptor sd = new SensorDescriptor("t1", 2, 3);
+   repository.startRefresh(sd);
    
    // Check the values.
-   assertEquals(1, repository.getTimerRepository().size());
-   assertEquals("t1", t.getSensorDescriptor().getSensorName());
-   assertEquals(2, t.getSensorDescriptor().getPinNumber());
-   assertEquals(3, t.getSensorDescriptor().getFrequency());
+   assertEquals(1, repository.size());
 }
 }

@@ -22,11 +22,11 @@ public class SensorTimerRepository
  * @author  Jean Oudot - IUT Nice / Sophia Antipolis - S4D
  * @version 1.0.0
  */
-public static class MyTimerTask
+private class MyTimerTask
 extends TimerTask
 {
 
-/** Sensor data */
+/** Sensor descriptor */
 private SensorDescriptor descriptor;
 
 
@@ -53,7 +53,7 @@ public SensorDescriptor getSensorDescriptor()
 
 
 /**
- * Execute action when timer task is create.
+ * Execute action when timer task is executed.
  */
 public synchronized void run()
 {
@@ -63,7 +63,7 @@ public synchronized void run()
       // Create the sensor data.
       sensorData = new SensorData(descriptor.getSensorName(), phidget.getPhidget().getSensorValue(descriptor.getPinNumber()),
       System.currentTimeMillis());
-      System.out.println(sensorData.getSensorValue());
+      //System.out.println(sensorData.getSensorValue());
 
       // Put the data in the history and in the configuration.
       phidget.refreshSensorData(sensorData);
@@ -79,7 +79,7 @@ public synchronized void run()
 private Timer sensorTimer;
 
 /** Phidget micro controller */
-private static MicroControllerPhidget phidget;
+private MicroControllerPhidget phidget;
 
 /** Sensor name linked to a timer task */
 private HashMap<String, MyTimerTask> sensorRepository = new HashMap<String, MyTimerTask>();
@@ -98,79 +98,60 @@ public SensorTimerRepository(MicroControllerPhidget phi)
 
 
 /**
- * Add a timer task to the repository.
+ * Start refresh of a sensor data.
  * 
- * @param sname Sensor name to link with the timer task.
- * @param timer Task to link with the given sensor name.
- * 
- * @throws ControllerException Controller error.
+ * @param sd Sensor descriptor.
  */
-public void put(String sname, MyTimerTask timer)
-throws ControllerException
+public void startRefresh(SensorDescriptor sd)
 {
-   if ((sname == null) || (timer == null))
-      throw new ControllerException("The name or the timer are null.");
-   
-   sensorRepository.put(sname, timer);
+   // Create the timer.
+   MyTimerTask timer = new MyTimerTask(sd);
+
+   // Put the data in the map.
+   sensorRepository.put(sd.getSensorName(), timer);
    sensorTimer.schedule(timer, 0, timer.getSensorDescriptor().getFrequency() * 1000);
+
 }
 
 
 /**
- * Get a timer task from a sensor name.
+ * Get the timer repository size.
  * 
- * @param sname Sensor name.
- * @return      The timer task link to this name.
+ * @return The number of sensor managed by this timer repository.d
  */
-public MyTimerTask get(String sname)
+public int size()
 {
-   return sensorRepository.get(sname);
+   return sensorRepository.size();
 }
 
 
 /**
- * Get the timer repository hash map.
+ * Remove a sensor from the timer manager. 
  * 
- * @return The sensor timer repository hash map.
- */
-public HashMap<String, MyTimerTask> getTimerRepository()
-{
-   return sensorRepository;
-}
-
-
-/**
- * Delete an entry of the map. 
- * 
- * @param sname Name of the sensor to delete.
+ * @param sname Name of the sensor to remove.
  */
 public void remove(String sname)
 {
-   // Get the tasks and cancel it.
-   sensorRepository.get(sname).cancel();
+   MyTimerTask t = sensorRepository.remove(sname);
 
-   // Remove the map entry.
-   sensorRepository.remove(sname);
+   // Stop the task.
+   if (t != null)
+      t.cancel();
 }
 
 
 /**
- * Deschedule a timer task from the repository and reschedule it with the new frequency.
+ * Change sensor refresh frequency.
  * 
- * @param sname   Sensor to change the timer frequency.
- * @param newFreq New frequency.
+ * @param sd New sensor descriptor.
+ * 
+ * @throws IllegalArgumentException Runtime exception.
  */
-public void changeTimerFrequency(String sname, int newFreq)
+public void changeTimerFrequency(SensorDescriptor sd)
+throws IllegalArgumentException
 {
-   // Stock the old task.
-   MyTimerTask t = sensorRepository.get(sname);
-
-   // Remove the old task.
-   sensorRepository.remove(sname);
-
-   // Add the new task, with the new frequency.
-   t.getSensorDescriptor().setFrequency(newFreq);
-   sensorRepository.put(sname, t);
+   remove(sd.getSensorName());
+   startRefresh(sd);
 }
 
 
@@ -179,14 +160,8 @@ public void changeTimerFrequency(String sname, int newFreq)
  */
 public void close()
 {
-   // Cancel all the timer task.
-   for (String n : sensorRepository.keySet())
-   {
-      MyTimerTask t = sensorRepository.get(n);
-      t.cancel();
-   }
-
-   sensorTimer.purge();
+   clear();
+   sensorTimer.cancel();
 }
 
 
@@ -195,6 +170,12 @@ public void close()
  */
 public void clear()
 {
+   // Cancel all the timer task.
+   for (MyTimerTask t : sensorRepository.values())
+   {
+      t.cancel();
+   }
+   sensorTimer.purge();
    sensorRepository.clear();
 }
 }

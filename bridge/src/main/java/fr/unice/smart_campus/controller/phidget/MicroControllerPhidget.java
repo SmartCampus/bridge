@@ -29,7 +29,6 @@ import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
 import fr.unice.smart_campus.data.SensorTimerRepository;
-import fr.unice.smart_campus.data.SensorTimerRepository.MyTimerTask;
 import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
@@ -151,7 +150,7 @@ throws ControllerException
       configuration.addSensor(sd);
 
       // Add a new sensor task.
-      timerRepository.put(sd.getSensorName(), new MyTimerTask(sd));
+      timerRepository.startRefresh(sd);
 
    }
    catch (IOException e)
@@ -200,7 +199,7 @@ throws ControllerException
    sd.setFrequency(freq);
    
    // Change timer frequency.
-   timerRepository.changeTimerFrequency(name, freq);
+   timerRepository.changeTimerFrequency(sd);
 }
 
 

@@ -130,12 +130,10 @@ throws ControllerException
    SensorDescriptor sd = new SensorDescriptor("t1", 2, 3);
    controller.addSensor(sd);
    assertNotNull(controller.getConfiguration().getSensorFromName("t1").equals(sd));
-   assertNotNull(controller.getSensorTimerRepository().get("t1"));
 
    // Delete the sensor.
    controller.deleteSensor("t1");
    assertNull(controller.getConfiguration().getSensorFromName("t1"));
-   assertNull(controller.getSensorTimerRepository().get("t1"));
 }
 
 
