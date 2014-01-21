@@ -382,7 +382,6 @@ throws ControllerException
 /**
  * Wait for message starting by string contained in variable expectedMessageStart.
  * 
- * @param str     Departure message.
  * @param timeout Wait timeout.
  * 
  * @throws InterruptedException 
@@ -392,32 +391,14 @@ private synchronized void waitForMessageStartingBy(int timeout)
 throws InterruptedException, IOException
 {
    long endTime = System.currentTimeMillis() + timeout;
+   
+   // Wait until the expected message arrive.
    while ((receivedResponse == null) || !(receivedResponse.startsWith(expectedMessageStart)))
    {
       long cTime = System.currentTimeMillis();
       if (cTime >= endTime)
          throw new IOException("Timeout waiting for message starting by : " + expectedMessageStart);
-
       wait(endTime - cTime);
    }
 }
-
-
-
-
-/**
- * Test main.
- * 
- * @param args Program arguments.
- * 
- * @throws Exception 
- */
-/*public static void main(String[] args)
-throws Exception
-{
-   SerialConnection sc = new SerialConnection("COM4");
-   MicroController mc = new MicroController(sc);
-
-   mc.execCommand("add t1 2 3");
-}*/
 }

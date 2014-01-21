@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.restserver;
 
 import org.restlet.Component;
@@ -8,25 +9,27 @@ import org.restlet.data.Protocol;
  * @author Cyril Cecchinel
  *
  */
-public class RestServer {
+public class RestServer
+{
 
-	
-	/**
-	 * Constructor to RestServer
-	 * @param portNumber Port to listen
-	 * @throws Exception
-	 */
-	public RestServer(int portNumber) throws Exception{
-		// Create a new Component.
-		Component component = new Component();
+/**
+ * Constructor to RestServer
+ * @param portNumber Port to listen
+ * @throws Exception
+ */
+public RestServer(int portNumber)
+throws Exception
+{
+   // Create a new Component.
+   Component component = new Component();
 
-		component.getServers().add(Protocol.HTTP, portNumber);
+   component.getServers().add(Protocol.HTTP, portNumber);
 
-		// Attach the application.
-		component.getDefaultHost().attach(new BridgeRestApi());
+   // Attach the application.
+   component.getDefaultHost().attach(new BridgeRestApi());
 
-		// Start the component.
-		component.start();
-	}	
-	
+   // Start the component.
+   component.start();
+}
+
 }

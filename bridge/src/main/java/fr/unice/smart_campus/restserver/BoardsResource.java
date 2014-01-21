@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.restserver;
 
 import org.json.JSONArray;
@@ -15,28 +16,37 @@ import fr.unice.smart_campus.data.ControllerException;
  * @author Cyril Cecchinel
  *
  */
-public class BoardsResource extends ServerResource {
+public class BoardsResource
+extends ServerResource
+{
 
-	/**
-	 * Get all boards plugged on this bridge
-	 * @return JSON representation of boards plugged
-	 */
-	@Get
-	public String getBoards(){
-		JSONArray arr = new JSONArray();
+/**
+ * Get all boards plugged on this bridge
+ * @return JSON representation of boards plugged
+ */
+@Get
+public String getBoards()
+{
+   JSONArray arr = new JSONArray();
 
-		for (MicroController mc : Main.getMicroControllers()){
-			JSONObject obj;
-			try {
-				obj = new JSONObject().put("id", mc.getBoardId());
-				arr.put(obj);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			} catch (ControllerException e) {
-				e.printStackTrace();
-			}
+   for (MicroController mc : Main.getMicroControllers())
+   {
+      JSONObject obj;
+      try
+      {
+         obj = new JSONObject().put("id", mc.getBoardId());
+         arr.put(obj);
+      }
+      catch (JSONException e)
+      {
+         e.printStackTrace();
+      }
+      catch (ControllerException e)
+      {
+         e.printStackTrace();
+      }
 
-		}
-		return new JSONObject().put("boards", arr).toString();
-	}
+   }
+   return new JSONObject().put("boards", arr).toString();
+}
 }

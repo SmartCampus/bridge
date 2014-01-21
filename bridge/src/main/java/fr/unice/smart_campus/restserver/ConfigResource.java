@@ -1,3 +1,4 @@
+
 package fr.unice.smart_campus.restserver;
 
 import org.restlet.resource.Put;
@@ -8,10 +9,13 @@ import org.restlet.resource.ServerResource;
  * @author Cyril Cecchinel
  *
  */
-public class ConfigResource extends ServerResource {
+public class ConfigResource
+extends ServerResource
+{
 
-	@Put
-	public String putConfig(){
-		return "TODO: put config";
-	}
+@Put
+public String putConfig()
+{
+   return "TODO: put config";
+}
 }
