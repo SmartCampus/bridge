@@ -88,7 +88,7 @@ throws InterruptedException, IOException, ControllerException
  * 
  * @return The MicroController configuration.
  */
-public MicroControllerConfig getConfig()
+public MicroControllerConfig getConfiguration()
 {
    return configuration;
 }

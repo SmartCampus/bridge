@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,16 +13,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.phidgets.PhidgetException;
-
 import fr.unice.smart_campus.Configuration;
 import fr.unice.smart_campus.Constants;
+import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.controller.MicroControllerConfig;
 import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.transformer.DataTransformer;
-import fr.unice.smart_campus.transformer.JsonTransformer;
 
 /**
  * Test the MicroControllerPhidgetTest.java . 
@@ -36,7 +31,7 @@ public class MicroControllerPhidgetTest
 {
 
 /** Micro controller */
-private MicroControllerPhidget controller;
+private MicroController controller;
 
 /** Micro controller configuration */
 private Configuration phidgetConfig;
@@ -45,27 +40,22 @@ private Configuration phidgetConfig;
 /**
  * Set the test parameters.
  * 
- * @throws PhidgetException    Phidget error.
- * @throws IOException         IO error.
- * @throws ControllerException Controller error.
+ * @throws Exception Error.
  */
 @Before
 public void testSetup()
-throws ControllerException, IOException, PhidgetException
+throws Exception
 {
    System.out.println();
    System.out.println("=========== BUILD MICRO CONTROLLER ===========");
 
    // Build the Phidget configuration.
-   phidgetConfig = new Configuration(new File(Constants.PHIDGET_CONFIG_PATH));
+   phidgetConfig = new Configuration(new File(Constants.TEST_CONFIG_PATH));
 
    // Build the test attributes.
-   int phidgetSerialNumber = phidgetConfig.getPhidgetSerialNumber("controller1");
-   DataTransformer transformer = new JsonTransformer();
-   CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
-   File rootDir = new File(Constants.PHIDGET_DATA_PATH);
-   controller = new MicroControllerPhidget(repository, transformer, rootDir, phidgetSerialNumber);
-   controller.getConfiguration().clear();
+   String[] controllerNames = phidgetConfig.getAllControllerNames();
+   controller = phidgetConfig.createMicroController(controllerNames[1]);
+   controller.resetController();
 }
 
 

@@ -91,6 +91,14 @@ throws ControllerException, IOException, PhidgetException
 }
 
 
+public String execCommand(String string)
+throws ControllerException
+{
+   // TODO Auto-generated method stub
+   return null;
+}
+
+
 /**
  * Get the micro controller configuration.
  * 

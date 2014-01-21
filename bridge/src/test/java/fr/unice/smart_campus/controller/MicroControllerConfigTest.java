@@ -72,7 +72,7 @@ public void test01_AddSensor()
 throws IOException, ControllerException
 {
    microController.addSensor(new SensorDescriptor("t1", 2, 3));
-   MicroControllerConfig microControllerConfig = microController.getConfig();
+   MicroControllerConfig microControllerConfig = microController.getConfiguration();
 
    // Check if sensor has been correctly added.
    SensorDescriptor[] descriptors = microControllerConfig.getAllSensors();
@@ -92,7 +92,7 @@ public void test02_FileTest()
 throws IOException, ControllerException
 {
    // Get the MicroController configuration.
-   MicroControllerConfig microControllerConfig = microController.getConfig();
+   MicroControllerConfig microControllerConfig = microController.getConfiguration();
 
    // Volontary remove file.
    microControllerConfig.getConfigFile().delete();

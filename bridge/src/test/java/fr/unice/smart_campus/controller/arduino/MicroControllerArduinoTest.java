@@ -12,15 +12,11 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import fr.unice.smart_campus.Configuration;
 import fr.unice.smart_campus.Constants;
-import fr.unice.smart_campus.cnx.ControllerConnection;
-import fr.unice.smart_campus.cnx.SerialConnection;
-import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
+import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.transformer.DataTransformer;
-import fr.unice.smart_campus.transformer.JsonTransformer;
 
 /**
  * Unit test of the MicroController class.
@@ -33,7 +29,7 @@ public class MicroControllerArduinoTest
 {
 
 /** Micro controller */
-private MicroControllerArduino microController;
+private MicroController microController;
 
 
 /**
@@ -48,13 +44,13 @@ throws Exception
    System.out.println();
    System.out.println("=========== BUILD MICRO CONTROLLER ===========");
 
+   Configuration config = new Configuration(new File(Constants.TEST_CONFIG_PATH));
+   
    // Build the test attributes.
-   ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
-   DataTransformer transformer = new JsonTransformer();
-   CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
-   File rootDir = new File(Constants.ARDUINO_DATA_PATH);
-   microController = new MicroControllerArduino(connection, transformer, repository, rootDir);
+   String[] controllerNames = config.getAllControllerNames();
+   microController = config.createMicroController(controllerNames[0]);
    microController.resetController();
+   
 }
 
 

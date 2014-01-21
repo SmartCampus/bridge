@@ -46,7 +46,7 @@ throws Exception
 
    // Get all the micro controllers name.
    String[] controllerNames = config.getAllControllerNames();
-   controller = config.createMicroController(controllerNames[0]);
+   controller = config.createMicroController(controllerNames[1]);
    controller.resetController();
 }
 

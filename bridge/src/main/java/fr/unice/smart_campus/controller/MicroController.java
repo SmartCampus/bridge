@@ -105,4 +105,24 @@ public abstract SensorHistory getHistory();
 public abstract void resetController()
 throws ControllerException;
 
+
+/**
+ * Execute a command on the micro controller board.
+ * 
+ * @param string Command to execute.
+ * @return       The command response.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public abstract String execCommand(String string)
+throws ControllerException;
+
+
+/**
+ * This method gives back the configuration of a micro controller.
+ * 
+ * @return The configuration of a micro controller.
+ */
+public abstract MicroControllerConfig getConfiguration();
+
 }

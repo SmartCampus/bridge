@@ -13,6 +13,12 @@ public class ConfigResource
 extends ServerResource
 {
 
+
+/**
+ * ADD JAVADOC
+ * 
+ * @return ADD RETURN DOC
+ */
 @Put
 public String putConfig()
 {
