@@ -334,7 +334,5 @@ throws ControllerException
    // Check if the reset was effective.
    SensorDescriptor[] sensorArray = microController.getAllSensors();
    assertEquals(0, sensorArray.length);
-
 }
-
 }

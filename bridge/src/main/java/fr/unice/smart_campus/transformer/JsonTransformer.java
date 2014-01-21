@@ -1,15 +1,8 @@
 
 package fr.unice.smart_campus.transformer;
 
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.unice.smart_campus.Main;
-import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorValue;
 

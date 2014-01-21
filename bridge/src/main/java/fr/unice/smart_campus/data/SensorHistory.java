@@ -83,13 +83,15 @@ throws IOException
  * Read all datas of a sensor and put them into an array.
  * 
  * @param sensorName The sensor you want the datas.
+ * @param timeMin    Time from which we want the datas.
+ * @param timeMax    Time where we want to stop to get the datas.
  * 
  * @return An array of all datas.
  * 
  * @throws IOException         IO error.
  * @throws ControllerException Sensor history data file does not exist.
  */
-public SensorValue[] loadHistory(String sensorName)
+public SensorValue[] loadHistory(String sensorName, long timeMin, long timeMax)
 throws ControllerException, IOException
 {
    // Create the ArrayList of result.
@@ -107,6 +109,13 @@ throws ControllerException, IOException
       // Build the ArrayList of datas.
       String line = scanner.nextLine();
       SensorValue sv = transformer.toSensorValue(line);
+      long sensorTime = sv.getSensorTime();
+      if (sensorTime < timeMin)
+         continue;
+      if (sensorTime > timeMax)
+         break;
+
+      // Add sensor data to result.
       stockDatas.add(sv);
    }
    scanner.close();
@@ -119,38 +128,17 @@ throws ControllerException, IOException
 
 
 /**
- * Gives all the data between two time value.
+ * Load the full history.
  * 
- * @param name    Sensor name. 
- * @param timeMin Time from which we want to get back the data.
- * @param timeMax Time from which we stop to get back the data.
- * @return        An array containing the data between timeMin and timeMax.
+ * @param sname Name of the sensor.
+ * @return      All the sensor history.
  * 
  * @throws IOException         IO error.
- * @throws ControllerException Micro controller error.
+ * @throws ControllerException Controller error.
  */
-public SensorValue[] readData(long timeMin, long timeMax, String name)
+public SensorValue[] loadAllHistory(String sname)
 throws ControllerException, IOException
 {
-   if ((timeMin > timeMax) || (timeMax < timeMin))
-      throw new ControllerException("Invalid time.");
-   
-   // Sensor array result.
-   ArrayList<SensorValue> result = new ArrayList<SensorValue>();
-
-   // Get all the datas of the given sensor name.
-   SensorValue[] allData = loadHistory(name);
-
-   // Build the result ArrayList.
-   for (SensorValue sv : allData)
-   {
-      while ((sv.getSensorTime() >= timeMin) && (sv.getSensorTime() <= timeMax))
-         result.add(sv);
-   }
-
-   // Build the result array.
-   SensorData[] res = new SensorData[result.size()];
-   result.toArray(res);
-   return res;
+   return loadHistory(sname, 0, Long.MAX_VALUE);
 }
 }

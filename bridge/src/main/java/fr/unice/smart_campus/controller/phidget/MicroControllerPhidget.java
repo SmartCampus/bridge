@@ -197,7 +197,7 @@ throws ControllerException
 
    // Change sensor frequency.
    sd.setFrequency(freq);
-   
+
    // Change timer frequency.
    timerRepository.changeTimerFrequency(sd);
 }
@@ -220,10 +220,25 @@ throws ControllerException
    return sd;
 }
 
-public String getBoardId() throws ControllerException {
-	// TODO Implement getBoardId logic for Phidgets + Javadoc
-	return null;
+
+public String getBoardId()
+throws ControllerException
+{
+   // TODO Implement getBoardId logic for Phidgets + Javadoc
+   return null;
 }
+
+
+/**
+ * Get the controller sensor data history.
+ * 
+ * @return The controller history.
+ */
+public SensorHistory getHistory()
+{
+   return history;
+}
+
 
 /**
  * Get all the sensor currently plugged on the Phidget board.
@@ -388,7 +403,5 @@ throws PhidgetException
    ik.waitForAttachment();
    return ik;
 }
-
-
 
 }

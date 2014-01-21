@@ -3,6 +3,7 @@ package fr.unice.smart_campus.controller;
 
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorDescriptor;
+import fr.unice.smart_campus.data.SensorHistory;
 
 /**
  * 
@@ -76,14 +77,32 @@ throws ControllerException;
 public abstract SensorDescriptor[] getAllSensors()
 throws ControllerException;
 
+
 /**
  * Get the board Id
  * 
  * @return Return board Id
  * 
- * @throws ControllerException
+ * @throws ControllerException Controller error.
  */
 public abstract String getBoardId()
+throws ControllerException;
+
+
+/**
+ * Get the controller sensor data history.
+ * 
+ * @return The controller sensor history.
+ */
+public abstract SensorHistory getHistory();
+
+
+/**
+ * Reset the micro controller.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public abstract void resetController()
 throws ControllerException;
 
 }

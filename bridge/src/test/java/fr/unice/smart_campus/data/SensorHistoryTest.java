@@ -107,7 +107,7 @@ throws IOException, ControllerException
    history.addData(sd);
 
    // Check if sensor data history file has been created.
-   SensorValue[] sensorHistory = history.loadHistory("t1");
+   SensorValue[] sensorHistory = history.loadAllHistory("t1");
    assertTrue(sensorHistory.length > 0);
    assertTrue((sensorHistory[sensorHistory.length - 1]).equals(sd));
 }
@@ -123,7 +123,7 @@ throws IOException, ControllerException
 public void test04_LoadHistory_01()
 throws ControllerException, IOException
 {
-   history.loadHistory("unknownSensorName");
+   history.loadAllHistory("unknownSensorName");
 }
 
 
@@ -138,7 +138,7 @@ public void test04_LoadHistory_02()
 throws IOException, ControllerException
 {
    // Load the history for a first time.
-   SensorValue[] sensorHistory1 = history.loadHistory("t1");
+   SensorValue[] sensorHistory1 = history.loadAllHistory("t1");
    assertNotNull(sensorHistory1);
 
    // Add sensor data to the history.
@@ -148,7 +148,7 @@ throws IOException, ControllerException
    history.addData(sd2);
 
    // Load the history from the file.
-   SensorValue[] sensorHistory2 = history.loadHistory("t1");
+   SensorValue[] sensorHistory2 = history.loadAllHistory("t1");
    assertEquals(sensorHistory2.length, sensorHistory1.length + 2);
    assertEquals(sensorHistory2[sensorHistory2.length - 2], sd1);
    assertEquals(sensorHistory2[sensorHistory2.length - 1], sd2);

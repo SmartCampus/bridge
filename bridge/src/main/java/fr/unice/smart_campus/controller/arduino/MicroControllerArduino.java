@@ -269,6 +269,17 @@ throws ControllerException
 }
 
 
+/**
+ * Get the controller sensor value history.
+ * 
+ * @return The controller history.
+ */
+public SensorHistory getHistory()
+{
+   return history;
+}
+
+
 /* (non-Javadoc)
  * @see fr.unice.smart_campus.controller.MicroController#getAllSensors()
  */
