@@ -7,6 +7,15 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import fr.unice.smart_campus.cnx.ControllerConnection;
+import fr.unice.smart_campus.cnx.SerialConnection;
+import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
+import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
+import fr.unice.smart_campus.data.CurrentSensorDataRepository;
+import fr.unice.smart_campus.transformer.DataTransformer;
+import fr.unice.smart_campus.transformer.JsonTransformer;
+
 /**
  * Create the configuration of the all program.
  * 
@@ -48,6 +57,75 @@ public String[] getAllControllerNames()
    if (controllers == null)
       return new String[0];
    return JSONObject.getNames(controllers);
+}
+
+
+/**
+ * Create micro controller. 
+ * <br>This method create the appropriate instance of micro controller according to its configuration.</br>
+ * 
+ * @param name The name of the micro controller to create.
+ * 
+ * @return     A micro controller.
+ * @throws Exception 
+ */
+public MicroController createMicroController(String name)
+throws Exception
+{
+   // Retrieve the controller from the configuration.
+   JSONObject controller = getController(name);
+
+   // Get the micro controller type.
+   String type = controller.getString("type");
+
+   // Build the data root directory.
+   File rootDir = new File(getDataStoragePath());
+
+   // Check controller type.
+   if (type.equalsIgnoreCase("arduino"))
+   {
+      // Get the port name.
+      String portName = getControllerPortName(name);
+
+      // Get the connection type.
+      String connectionType = getControllerConnectionType(name);
+
+      // Get the controller format.
+      DataTransformer transformer;
+      String format = getControllerDataFormat(name);
+      if (format.equals("json"))
+         transformer = new JsonTransformer();
+      else
+         throw new Exception("Data format : " + format + " unknown.");
+
+      // Build the connection.
+      ControllerConnection connection;
+      if (connectionType.equals("serial"))
+         connection = new SerialConnection(portName);
+      else
+         throw new Exception("Connection type : " + connectionType + " unknown.");
+
+      return new MicroControllerArduino(connection, transformer, new CurrentSensorDataRepository(), rootDir);
+   }
+
+   else if (type.equalsIgnoreCase("phidget"))
+   {
+      // Get the phidget serial number.
+      int serialNumber = getPhidgetSerialNumber(name);
+      
+      // Get the controller format.
+      DataTransformer transformer;
+      String format = getControllerDataFormat(name);
+      if (format.equals("json"))
+         transformer = new JsonTransformer();
+      else
+         throw new Exception("Data format : " + format + " unknown.");
+      
+      return new MicroControllerPhidget(new CurrentSensorDataRepository(), transformer, rootDir, serialNumber);
+   }
+   
+   else
+      throw new Exception ("Unknown controller type:" + type);
 }
 
 
@@ -127,13 +205,36 @@ public String getRepositoryDataFormat()
 
 
 /**
+ * Get micro controller type.
+ * 
+ * @return The type of the micro controller.
+ */
+
+/**
+ * Get the Phidget serial number.
+ * 
+ * @param name Phidget controller name.
+ * 
+ * @return The Phidget serial number.
+ */
+public int getPhidgetSerialNumber(String name)
+{
+   // Get the phidget controller.
+   JSONObject controller = getController(name);
+
+   // Return the phidget controller serial number.
+   return controller.getInt("serial");
+}
+
+
+/**
  * Get a controller from his name.
  * 
  * @param controllerName Controller to get.
  * @return               The controller.
  */
 private JSONObject getController(String controllerName)
-{   
+{
    // Get the controller.
    JSONObject controllers = configContent.getJSONObject("controllers");
    return controllers.getJSONObject(controllerName);

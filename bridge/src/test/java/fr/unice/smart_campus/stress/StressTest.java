@@ -10,7 +10,7 @@ import org.junit.runners.MethodSorters;
 import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
-import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.transformer.DataTransformer;
@@ -27,7 +27,7 @@ public class StressTest
 {
 
 /** Micro controller */
-private MicroController microController;
+private MicroControllerArduino microController;
 
 
 /**
@@ -53,7 +53,7 @@ throws Exception
  * 
  * @throws Exception General error.
  */
-/*@Test
+@Test
 public void test02_AddAndRemove()
 throws Exception
 {
@@ -63,11 +63,10 @@ throws Exception
    for (int i = 0; i < 1000; i++)
    {
       System.out.println("Loop : " + i);
-      microController.addSensor(new SensorDescriptor("t1", 2, 3));
+      microController.addSensor(new SensorDescriptor("t1", 2, 3, "0.0.0.0", 0));
       microController.deleteSensor("t1");
-      System.out.println("Error number : " + microController.getCommandError());
    }
-}*/
+}
 
 
 /**
@@ -82,8 +81,8 @@ throws Exception
    ControllerConnection connection = (SerialConnection) new SerialConnection(Constants.PORT_NAME);
    DataTransformer transformer = new JsonTransformer();
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
-   File rootDir = new File(Constants.DATA_PATH);
-   microController = new MicroController(connection, transformer, repository, rootDir);
+   File rootDir = new File(Constants.ARDUINO_DATA_PATH);
+   microController = new MicroControllerArduino(connection, transformer, repository, rootDir);
    microController.resetController();
 }
 }

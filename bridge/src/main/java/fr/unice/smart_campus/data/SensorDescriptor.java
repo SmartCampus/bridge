@@ -1,7 +1,10 @@
+
 package fr.unice.smart_campus.data;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.StringTokenizer;
-
 
 /**
  * Sensor description.
@@ -11,28 +14,44 @@ import java.util.StringTokenizer;
  */
 public class SensorDescriptor
 {
+
 /** Sensor refresh frequency */
 private int sensorFrequency;
 
 /** Sensor pin number */
-private int pinNumber; 
+private int pinNumber;
 
 /** Sensor name */
 private String sensorName;
 
+/** End point URL to send data */
+private String sensorEndPointURL;
+
+/** End point port to send data */
+private int sensorEndPointPort;
 
 /**
  * Default constructor.
  * 
- * @param frequency Sensor refresh frequency.
- * @param pin       Sensor pin number.
- * @param name      Sensor name.
+ * @param frequency 	Sensor refresh frequency.
+ * @param pin       	Sensor pin number.
+ * @param name      	Sensor name.
+ * @param endPointURL	Sensor endpoint URL.
+ * @param endPointPort	Sensor endpoint port.
+ * 
+ * @throws ControllerException Controller error.
  */
-public SensorDescriptor(String name, int pin, int frequency)
+public SensorDescriptor(String name, int pin, int frequency, String endPointURL, int endPointPort)
+throws ControllerException
 {
+   if ((pin < 0) || (frequency < 0))
+      throw new ControllerException("Pin number or frequency is inferior to 0.");
+
    sensorFrequency = frequency;
    pinNumber = pin;
    sensorName = name;
+   sensorEndPointURL = endPointURL;
+   sensorEndPointPort = endPointPort;
 }
 
 
@@ -46,15 +65,21 @@ public SensorDescriptor(String sdata)
 {
    // Build the object from the String.
    StringTokenizer tkz = new StringTokenizer(sdata, ": ");
-   
+
    // Build sensor name.
    sensorName = tkz.nextToken();
 
-   // Build sensor pinNumber.
+   // Build sensor pinNumber
    pinNumber = Integer.parseInt(tkz.nextToken());
-   
+
    // Build sensor frequency.
    sensorFrequency = Integer.parseInt(tkz.nextToken());
+   
+   // Build sensor end point url
+   sensorEndPointURL = tkz.nextToken();
+
+   // Build sensor end point port;
+   sensorEndPointPort = Integer.parseInt(tkz.nextToken());
 }
 
 
@@ -66,6 +91,17 @@ public SensorDescriptor(String sdata)
 public int getFrequency()
 {
    return sensorFrequency;
+}
+
+
+/**
+ * Change the sensor frequency.
+ * 
+ * @param newFreq The new frequency of the sensor.
+ */
+public void setFrequency(int newFreq)
+{
+   sensorFrequency = newFreq;
 }
 
 
@@ -89,4 +125,15 @@ public String getSensorName()
 {
    return sensorName;
 }
+
+/**
+ * Get the sensor end point.
+ * 
+ * @return The sensor end point.
+ */
+public String getEndPoint()
+{
+	return sensorEndPointURL + ":" + sensorEndPointPort;
+}
+
 }

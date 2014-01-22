@@ -15,6 +15,7 @@ import org.junit.runners.MethodSorters;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
+import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
@@ -32,7 +33,7 @@ public class MicroControllerConfigTest
 {
 
 /** Micro controller */
-private MicroController microController;
+private MicroControllerArduino microController;
 
 
 /**
@@ -70,8 +71,8 @@ public void testEnd()
 public void test01_AddSensor()
 throws IOException, ControllerException
 {
-   microController.addSensor(new SensorDescriptor("t1", 2, 3));
-   MicroControllerConfig microControllerConfig = microController.getConfig();
+   microController.addSensor(new SensorDescriptor("t1", 2, 3, "0.0.0.0", 0));
+   MicroControllerConfig microControllerConfig = microController.getConfiguration();
 
    // Check if sensor has been correctly added.
    SensorDescriptor[] descriptors = microControllerConfig.getAllSensors();
@@ -91,13 +92,13 @@ public void test02_FileTest()
 throws IOException, ControllerException
 {
    // Get the MicroController configuration.
-   MicroControllerConfig microControllerConfig = microController.getConfig();
+   MicroControllerConfig microControllerConfig = microController.getConfiguration();
 
    // Volontary remove file.
    microControllerConfig.getConfigFile().delete();
 
    // Add a sensor to the file.
-   microController.addSensor(new SensorDescriptor("t1", 2, 3));
+   microController.addSensor(new SensorDescriptor("t1", 2, 3, "0.0.0.0", 0));
 
    // Check if config file has been successfully re created.
    File config = microControllerConfig.getConfigFile();
@@ -128,8 +129,8 @@ throws ControllerException, IOException
 public void test04_TestAll()
 throws Exception
 {
-   microController.addSensor(new SensorDescriptor("t1", 2, 3));
-   microController.addSensor(new SensorDescriptor("t2", 3, 4));
+   microController.addSensor(new SensorDescriptor("t1", 2, 3, "0.0.0.0", 0));
+   microController.addSensor(new SensorDescriptor("t2", 3, 4, "0.0.0.0", 0));
 
    // Reset the connection.
    microController.close();
@@ -162,6 +163,6 @@ throws Exception
    DataTransformer transformer = new JsonTransformer();
    CurrentSensorDataRepository repository = new CurrentSensorDataRepository();
    File rootDir = new File("ControllerDatas");
-   microController = new MicroController(connection, transformer, repository, rootDir);
+   microController = new MicroControllerArduino(connection, transformer, repository, rootDir);
 }
 }

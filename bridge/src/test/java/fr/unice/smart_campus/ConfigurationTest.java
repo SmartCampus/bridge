@@ -35,8 +35,7 @@ private Configuration config;
 public void testSetup()
 throws FileNotFoundException
 {
-   File configFile = new File("run/config.cfg");
-   config = new Configuration(configFile);
+   config = new Configuration(new File(Constants.ARDUINO_CONFIG_PATH));
 }
 
 
@@ -83,7 +82,7 @@ public void test02_GetControllersName()
  * Test the getControllerConnectionType() method error, 
  * when an unknown controller is given.
  */
-@Test(expected = JSONException.class) 
+@Test(expected = JSONException.class)
 public void test03_GetConnectionType_01()
 {
    config.getControllerConnectionType("test");
@@ -155,7 +154,7 @@ public void test05_GetControllerDataFormat_02()
 public void test06_GetDataStoragePath()
 {
    String dataStoragePath = config.getDataStoragePath();
-   assertEquals("ControllerDatas", dataStoragePath);
+   assertEquals("Test/ControllerData/Arduino", dataStoragePath);
 }
 
 
@@ -167,6 +166,26 @@ public void test07_GetRepositoryDataFormat()
 {
    String reposDataFormat = config.getRepositoryDataFormat();
    assertEquals("json", reposDataFormat);
+}
+
+
+/**
+ * Test the getPhidgetSerialNumber() method good exectuion.
+ * 
+ * @throws FileNotFoundException File error.
+ */
+@Test
+public void test08_GetPhidgetSerialNumber()
+throws FileNotFoundException
+{
+   // Get the Phidget configuration file.
+   File configFile = new File(Constants.PHIDGET_CONFIG_PATH);
+   Configuration phidgetConfig = new Configuration(configFile);
+   
+   // GEt the Phidget serial number.
+   int serialNumber = phidgetConfig.getPhidgetSerialNumber("controller1");
+   assertEquals(6706, serialNumber);
+
 }
 
 }

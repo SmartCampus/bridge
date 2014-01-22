@@ -164,8 +164,8 @@ private synchronized void processReceivedEvent(SerialPortEvent oEvent)
       {
          // Wait input to be ready (mandatory, exception o/w).
          String inputLine = readLine(input);
-         System.out.println("Received line (" + oEvent.getSource() + "): " + inputLine);
-
+         System.out.println("Received line : " + inputLine);
+         
          // Notify listener.
          if ((listener != null) && (inputLine != null))
             listener.messageReceived(inputLine);

@@ -32,16 +32,61 @@ private File configFile;
 
 
 /**
- * List all the sensor in the configuration.
+ * Default constructor.
  * 
- * @return Return an array that gives all the sensors in the configuration.
+ * @param controller Controller currently in use.
+ * @param file       File who contains the micro controller configuration.
+ * 
+ * @throws IOException         IO Error.
+ * @throws ControllerException Micro controller error.
  */
-public SensorDescriptor[] getAllSensors()
+public MicroControllerConfig(File file)
+throws ControllerException, IOException
 {
-   // Build the result.
-   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
-   sensorsDescriptions.toArray(res);
-   return res;
+   // Build variables.
+   sensorsDescriptions = new ArrayList<SensorDescriptor>();
+
+   // Build the directory path.
+   configFile = file;
+   configFile.getParentFile().mkdirs();
+
+   loadConfig();
+}
+
+
+/**
+ * Get a sensor in the configuration from its name.
+ * 
+ * @param sensorName Name of the sensor.
+ * @return           The sensor descriptor linked to the name, null if none.
+ */
+public SensorDescriptor getSensorFromName(String sensorName)
+{
+   for (SensorDescriptor sd : sensorsDescriptions)
+   {
+      if (sensorName.equals(sd.getSensorName()))
+         return sd;
+   }
+
+   return null;
+}
+
+
+/**
+ * Get a sensor in the configuration from its pin number.
+ * 
+ * @param pinNumber The sensor pin number.
+ * @return          The sensor descriptor linked to the pin number, null if none.
+ */
+public SensorDescriptor getSensorFromPin(int pinNumber)
+{
+   for (SensorDescriptor sd : sensorsDescriptions)
+   {
+      if (pinNumber == sd.getPinNumber())
+         return sd;
+   }
+
+   return null;
 }
 
 
@@ -57,26 +102,16 @@ public File getConfigFile()
 
 
 /**
- * Default constructor.
+ * List all the sensor in the configuration.
  * 
- * @param controller Controller currently in use.
- * @param file       File who contains the micro controller configuration.
- * 
- * @throws IOException         IO Error.
- * @throws ControllerException Micro controller error.
+ * @return Return an array that gives all the sensors in the configuration.
  */
-MicroControllerConfig(File file)
-throws ControllerException, IOException
+public SensorDescriptor[] getAllSensors()
 {
-   // Build variables.
-   sensorsDescriptions = new ArrayList<SensorDescriptor>();
-
-   // Build the directory path.
-   configFile = file;
-   configFile.getParentFile().mkdirs();
-   
-
-   loadConfig();
+   // Build the result.
+   SensorDescriptor[] res = new SensorDescriptor[sensorsDescriptions.size()];
+   sensorsDescriptions.toArray(res);
+   return res;
 }
 
 
@@ -86,12 +121,19 @@ throws ControllerException, IOException
  * @param sensor Sensor to add.
  * 
  * @throws IOException IO error.
+ * @throws ControllerException 
  */
-void addSensor(SensorDescriptor sensor)
-throws IOException
+public void addSensor(SensorDescriptor sensor)
+throws IOException, ControllerException
 {
-   sensorsDescriptions.add(sensor);
-   writeToFile();
+   if (!(sensorsDescriptions.contains(sensor)))
+   {
+      sensorsDescriptions.add(sensor);
+      writeToFile();
+      return;
+   }
+
+   throw new ControllerException("The sensor : " + sensor.getSensorName() + " is already in configuration.");
 }
 
 
@@ -102,11 +144,11 @@ throws IOException
  * 
  * @throws IOException IO error.
  */
-void delSensor(String name)
+public void delSensor(String name)
 throws IOException
 {
    // Remove sensor from configuration.
-   for (int i = sensorsDescriptions.size() - 1; i >= 0 ;i--)
+   for (int i = sensorsDescriptions.size() - 1; i >= 0; i--)
    {
       SensorDescriptor sd = sensorsDescriptions.get(i);
       if (sd.getSensorName().equals(name))
@@ -115,7 +157,7 @@ throws IOException
          break;
       }
    }
-   
+
    writeToFile();
 }
 
@@ -123,10 +165,11 @@ throws IOException
 /**
  * Clear the configuration.
  */
-void clear()
+public void clear()
 {
    sensorsDescriptions.clear();
 }
+
 
 /**
  * Write the config into a file. 
@@ -146,7 +189,7 @@ throws IOException
    try
    {
       for (SensorDescriptor sd : sensorsDescriptions)
-         pw.println(sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency());
+         pw.println(sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency() + " " + sd.getEndPoint());
    }
    finally
    {
