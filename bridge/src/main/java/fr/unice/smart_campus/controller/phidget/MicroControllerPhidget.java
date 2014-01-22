@@ -273,6 +273,42 @@ public void resetController()
 
 
 /**
+ * Suspend a sensor (prevent it to send data).
+ * 
+ * @param sname Name of the sensor to suspend.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public void suspendSensor(String sname)
+throws ControllerException
+{
+   // Remove the sensor from the repository and the timer repository.
+   repository.remove(sname);
+   timerRepository.remove(sname);
+}
+
+
+/**
+ * Resume a sensor.
+ * 
+ * @param sname Name of the sensor to resume.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public void resumeSensor(String sname)
+throws ControllerException
+{
+   // Check if sensor exists.
+   SensorDescriptor sd = configuration.getSensorFromName(sname);
+   if (sd == null)
+      throw new ControllerException("The sensor '" + sname + "' does not exist.");
+
+   // Resume the sensor task.
+   timerRepository.startRefresh(sd);
+}
+
+
+/**
  * Close the phidget board and the timer repository.
  */
 public void close()

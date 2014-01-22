@@ -98,6 +98,28 @@ public abstract SensorHistory getHistory();
 
 
 /**
+ * Suspend a sensor (prevent it to send data).
+ * 
+ * @param sname Name of the sensor to suspend.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public abstract void suspendSensor(String sname)
+throws ControllerException;
+
+
+/**
+ * Resume a sensor.
+ * 
+ * @param sname Name of the sensor to resume.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public abstract void resumeSensor(String sname)
+throws ControllerException;
+
+
+/**
  * Reset the micro controller.
  * 
  * @throws ControllerException Controller error.

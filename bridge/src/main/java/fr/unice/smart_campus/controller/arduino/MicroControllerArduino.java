@@ -169,8 +169,8 @@ public synchronized void messageReceived(String msg)
 }
 
 
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#close()
+/**
+ * Close the micro controller connection.
  */
 public void close()
 {
@@ -178,8 +178,10 @@ public void close()
 }
 
 
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#addSensor(fr.unice.smart_campus.data.SensorDescriptor)
+/**
+ * Add a sensor to the micro controller. 
+ * 
+ * @param sd Sensor to add to the micro controller.
  */
 public void addSensor(SensorDescriptor sd)
 throws ControllerException
@@ -198,8 +200,10 @@ throws ControllerException
 }
 
 
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#deleteSensor(java.lang.String)
+/**
+ * Delete a sensor from the micro controller.
+ * 
+ * @param name Name of the sensor to delete.
  */
 public void deleteSensor(String name)
 throws ControllerException
@@ -222,27 +226,72 @@ throws ControllerException
 }
 
 
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#changeSensorFrequency(java.lang.String, int)
+/**
+ * Change a sensor refresh data rate. 
+ * 
+ * @param name Name of the sensor to change the frequency.
+ * @param freq New frequency of the sensor.
  */
 public void changeSensorFrequency(String name, int freq)
 throws ControllerException
 {
+   // Check frequency.
    if (freq < 0)
       throw new ControllerException("Frequency has to be > to 0.");
+   
+   // Change the frequency.
    execCommand("freq " + name + " " + freq);
 }
 
 
+/**
+ * Get the micro controller board id. 
+ * 
+ * @return The micro controller board id.
+ */
 public String getBoardId() 
 throws ControllerException 
 {
-	String response = execCommand("boardid");
-	
-	return response;
+   // Get the board ID.
+	return execCommand("boardid");
 }
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#getSensorInformation(java.lang.String)
+
+
+/**
+ * Suspend a sensor (prevent it to send data).
+ * 
+ * @param sname Name of the sensor to suspend.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public void suspendSensor(String sname)
+throws ControllerException
+{
+   // Suspend a sensor.
+   execCommand("suspend " + sname);
+}
+
+
+/**
+ * Resume a sensor.
+ * 
+ * @param sname Name of the sensor to resume.
+ * 
+ * @throws ControllerException Controller error.
+ */
+public void resumeSensor(String sname)
+throws ControllerException
+{
+   // Resume the sensor.
+   execCommand("resume " + sname);
+}
+
+
+/**
+ * Get all the information about a plugged sensor (name, refresh rate, pin number ...). 
+ * 
+ * @param name Name of the sensor to get the information.
+ * @return     Information about the sensor.
  */
 public SensorDescriptor getSensorInformation(String name)
 throws ControllerException
@@ -280,8 +329,10 @@ public SensorHistory getHistory()
 }
 
 
-/* (non-Javadoc)
- * @see fr.unice.smart_campus.controller.MicroController#getAllSensors()
+/**
+ * Get all the sensor plugged on the micro controller board.
+ * 
+ * @return An array of all the sensors plugged on the board.
  */
 public SensorDescriptor[] getAllSensors()
 throws ControllerException
