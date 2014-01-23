@@ -39,3 +39,43 @@ La partie source (src) est divisée en 8 packages :
     * __JsonTransformer.java :__ transforme un message du micro contrôleur en un objet JSON, qui sera enegistré dans un fichier ou envoyer à une adresse http. Produit également des données de capteurs depuis un objet JSON. Cette classe se charge du management des flux de données. 
 
 Chacune de ses classes à été testée. De même, plusieurs "stress test" ont été réalisés, pour assurer la stabilité de la plateform en cas d'une utilisation particulièrement prolongée.
+
+Confiugration du bridge 
+-------
+
+Comme le bridge doit être facile d'utilisation et d'emploi, un fichier de configuration a été mis en place. Ce fichier est au format JSON. Il permet d'initialiser les paramètres de chaque micro contrôleur. Le fichier est au format suivant : 
+
+// Configuration file for Data Collector.
+{
+   // Parameters for sensor datas repository. 
+   repository:
+   {
+      rootdir: "YourDataPath",
+      format: json
+   },
+   
+   // List of controllers connected to this data collector.
+   controllers: 
+   {
+      controller1:
+      {
+         type: arduino,
+         connection: serial,
+         port: COM4,
+         format: json
+      },
+      
+      controller2:
+      {
+         type: phidget,
+         serial: 6706,
+         format: json
+      }
+   }
+}
+
+En premier lieu, vous pouvez configurer le lieu de stockage de vos données, et le format sous lequel elles vont être sauvegardées (ici JSON). Chaque données est stockées dans un fichier prenant pour nom le nom du capteur qui a envoyé les données. 
+En second lieu vient la liste des contrôleurs actifs. Chaque contrôleur possède un nom, un type et un format d'envoie de données (ici Json, mais il est également possible d'indiquer une adresse IP de destination). Selon le type du contrôleur (pour le moment Arduino ou Phidget), différent paramètres sont à indiquer. 
+Pour l'Arduino, le type de connection, le port de lecture et d'écriture des données, ainsi que le format de ces données. 
+Pour le Phidget, il faut indiquer le numéro de série de chaque Phidget (unique), ainsi que le format des données en lecture / écriture.
+         
