@@ -6,10 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import fr.unice.smart_campus.data.ControllerException;
+import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
+import fr.unice.smart_campus.restclient.BufferedRestClient;
+import fr.unice.smart_campus.restclient.RestClient;
 
 /**
  * Represents the MicroController config. This class is responsible for : 
@@ -26,6 +30,9 @@ public class MicroControllerConfig
 
 /** Map of sensors descriptors */
 private ArrayList<SensorDescriptor> sensorsDescriptions;
+
+/** Hashmap of sensor endpoint*/
+private HashMap<String, BufferedRestClient> sensorsEndpoints;
 
 /** Config file */
 private File configFile;
@@ -45,7 +52,7 @@ throws ControllerException, IOException
 {
    // Build variables.
    sensorsDescriptions = new ArrayList<SensorDescriptor>();
-
+   sensorsEndpoints = new HashMap<String, BufferedRestClient>();
    // Build the directory path.
    configFile = file;
    configFile.getParentFile().mkdirs();
@@ -154,6 +161,7 @@ throws IOException
       if (sd.getSensorName().equals(name))
       {
          sensorsDescriptions.remove(i);
+         unmapSensor(name);
          break;
       }
    }
@@ -161,6 +169,37 @@ throws IOException
    writeToFile();
 }
 
+/**
+ * Map a sensor with an endpoint
+ * @param name	Sensor name
+ * @param endpointUrl End point url
+ * @param endpointPort End point Port
+ * @throws ControllerException
+ */
+public void mapSensor(String name, String endpointUrl, int endpointPort) throws ControllerException
+{
+	if(getSensorFromName(name) != null)
+	{
+		//TODO: Check cas de la double config
+		this.sensorsEndpoints.put(name, new BufferedRestClient(endpointUrl, endpointPort));
+		System.out.println("Sensor " + name + " mapped on: " + endpointUrl + ":" + endpointPort);
+	}
+	else throw new ControllerException("The sensor " + name + " has not been found");
+}
+
+public BufferedRestClient getMapping(String sname)
+{
+	return sensorsEndpoints.get(sname);
+}
+
+/**
+ * Unmap a sensor
+ * @param sensorName Sensor name
+ */
+public void unmapSensor(String sensorName)
+{
+	this.sensorsEndpoints.remove(sensorName);
+}
 
 /**
  * Clear the configuration.
@@ -228,5 +267,14 @@ throws IOException, ControllerException
       sensorsDescriptions.add(sd);
    }
    scanner.close();
+}
+
+
+public void sendToCollector(SensorData sd) {
+	if (getMapping(sd.getSensorName()) != null){
+		System.out.println("Mapping found ! " + getMapping(sd.getSensorName()) + " " + getMapping(sd.getSensorName()).getWaitingQueueSize());
+		this.sensorsEndpoints.get(sd.getSensorName()).fill(sd);
+	}
+		
 }
 }

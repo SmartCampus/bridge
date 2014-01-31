@@ -4,6 +4,7 @@ package fr.unice.smart_campus.controller;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
+import fr.unice.smart_campus.restclient.BufferedRestClient;
 
 /**
  * 
@@ -127,6 +128,20 @@ throws ControllerException;
 public abstract void resetController()
 throws ControllerException;
 
+/**
+ * Map a sensor with a rest client
+ * @param sname Sensor name
+ * @param endpointIP Endpoint Ip
+ * @param endpointPort Endpoint Port
+ * @throws ControllerException
+ */
+public abstract void mapSensor(String sname, String endpointIP, int endpointPort) throws ControllerException;
+
+/**
+ * Unmap a sensor
+ * @param sname Sensor name
+ */
+public abstract void unmapSensor(String sname);
 
 /**
  * Execute a command on the micro controller board.

@@ -14,6 +14,7 @@ import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
+import fr.unice.smart_campus.restclient.BufferedRestClient;
 import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
@@ -395,6 +396,9 @@ throws NoSuchFieldException, SecurityException, IOException
    SensorData sd = transformer.toSensorData(data);
    sd.setSensorTime(System.currentTimeMillis());
 
+   // Send data over network if sensor is mapped
+   configuration.sendToCollector(sd);
+   
    // Add data to the data history.
    history.addData(sd);
 
@@ -452,4 +456,25 @@ throws InterruptedException, IOException
       wait(endTime - cTime);
    }
 }
+
+/**
+ * Map a sensor with a rest client
+ * @param sname Sensor name
+ * @param endpointIP Endpoint Ip
+ * @throws ControllerException 
+ * @parem endpointPort Endpoint Port
+ */
+public void mapSensor(String sname, String endpointIP, int endpointPort) throws ControllerException {
+	configuration.mapSensor(sname, endpointIP, endpointPort);
+}
+
+/**
+ * Unmap a sensor
+ * @param sname Sensor name
+ */
+public void unmapSensor(String sname) {
+	configuration.unmapSensor(sname);
+}
+
+
 }

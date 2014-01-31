@@ -448,4 +448,22 @@ throws PhidgetException
    return ik;
 }
 
+/**
+ * Map a sensor with a rest client
+ * @param sname Sensor name
+ * @param endpointIP Endpoint Ip
+ * @throws ControllerException 
+ * @parem endpointPort Endpoint Port
+ */
+public void mapSensor(String sname, String endpointIP, int endpointPort) throws ControllerException {
+	configuration.mapSensor(sname, endpointIP, endpointPort);
+}
+
+/**
+ * Unmap a sensor
+ * @param sname Sensor name
+ */
+public void unmapSensor(String sname) {
+	configuration.unmapSensor(sname);
+}
 }

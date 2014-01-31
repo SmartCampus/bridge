@@ -9,7 +9,7 @@ import org.restlet.data.Protocol;
  * @author Cyril Cecchinel
  *
  */
-public class RestServer
+public class BridgeRestServer
 {
 
 /**
@@ -17,7 +17,7 @@ public class RestServer
  * @param portNumber Port to listen
  * @throws Exception
  */
-public RestServer(int portNumber)
+public BridgeRestServer(int portNumber)
 throws Exception
 {
    // Create a new Component.

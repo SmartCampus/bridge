@@ -7,7 +7,7 @@ import java.util.List;
 
 import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.restserver.RestServer;
+import fr.unice.smart_campus.restserver.BridgeRestServer;
 
 /**
  * Main launcher of the program. 
@@ -19,7 +19,7 @@ public class Main
 {
 
 /** List of all the Micro Controller plugged on the board. */
-private static ArrayList<MicroController> microControllers = new ArrayList<MicroController>();
+public static ArrayList<MicroController> microControllers = new ArrayList<MicroController>();
 
 
 /**
@@ -44,12 +44,12 @@ throws Exception
       microControllers.add(programConfig.createMicroController(n));
    }
 
-   MicroController ctrl =  microControllers.get(0);
+   /*MicroController ctrl =  microControllers.get(0);
    ctrl.resetController();
    ctrl.addSensor(new SensorDescriptor("t1 2 3"));
-   ctrl.addSensor(new SensorDescriptor("t2 4 5"));
+   ctrl.addSensor(new SensorDescriptor("t2 4 5"));*/
 
-   new RestServer(9001);
+   new BridgeRestServer(9001);
 }
 
 
@@ -62,4 +62,5 @@ public static List<MicroController> getMicroControllers()
 {
    return microControllers;
 }
+
 }

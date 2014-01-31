@@ -32,7 +32,7 @@ private String portName;
 private static final int TIME_OUT = 2000;
 
 /** Default bits per second for CMD port */
-private static final int DATA_RATE = 115200;
+private static final int DATA_RATE = 9600;
 
 /** Input stream */
 private InputStream input;
