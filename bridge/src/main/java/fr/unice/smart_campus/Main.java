@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.restserver.BridgeRestServer;
 
 /**

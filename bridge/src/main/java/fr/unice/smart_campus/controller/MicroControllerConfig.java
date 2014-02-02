@@ -13,7 +13,6 @@ import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.restclient.BufferedRestClient;
-import fr.unice.smart_campus.restclient.RestClient;
 
 /**
  * Represents the MicroController config. This class is responsible for : 
@@ -272,7 +271,6 @@ throws IOException, ControllerException
 
 public void sendToCollector(SensorData sd) {
 	if (getMapping(sd.getSensorName()) != null){
-		System.out.println("Mapping found ! " + getMapping(sd.getSensorName()) + " " + getMapping(sd.getSensorName()).getWaitingQueueSize());
 		this.sensorsEndpoints.get(sd.getSensorName()).fill(sd);
 	}
 		

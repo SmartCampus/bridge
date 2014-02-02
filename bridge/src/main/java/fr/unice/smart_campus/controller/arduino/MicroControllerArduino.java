@@ -14,7 +14,6 @@ import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
-import fr.unice.smart_campus.restclient.BufferedRestClient;
 import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**

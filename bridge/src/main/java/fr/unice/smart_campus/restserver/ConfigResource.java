@@ -1,9 +1,8 @@
 
 package fr.unice.smart_campus.restserver;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
@@ -24,9 +23,9 @@ extends ServerResource
 
 
 	/**
-	 * ADD JAVADOC
+	 * Put config method
+	 * Allows to configure sensor network from Internet
 	 * 
-	 * @return ADD RETURN DOC
 	 * @throws ControllerException 
 	 */
 	@Put
@@ -47,27 +46,40 @@ extends ServerResource
 			int sensorPin = Integer.parseInt(currentConfig.getString("pin"));
 			int sensorFreq = currentConfig.getInt("freq");
 
-			String sensorEndpointIP = currentConfig.getString("endpointIP");
-			int sensorEndpointPort = currentConfig.getInt("endpointPort");
+			String sensorEndpointIP = null;
+			int sensorEndpointPort = 0;
+
+			try{
+				sensorEndpointIP = currentConfig.getString("endpointIP");
+				sensorEndpointPort = currentConfig.getInt("endpointPort");
+			}
+			catch (JSONException exception)
+			{
+				System.err.println("No IP provided");
+			}
 
 			// Find the board
-			for (int j = 0; j < Main.getMicroControllers().size() ; j++)
+			for (MicroController mc : Main.microControllers)
 			{
-				MicroController microcontroller = Main.getMicroControllers().get(j);
 				try {
-					if (microcontroller.getBoardId().equals(boardName))
+
+					// Reset board
+					mc.resetController();
+
+					if (mc.getBoardId().equals(boardName))
 					{
 						// Check if the sensor has been already declared
-						if (microcontroller.getConfiguration().getSensorFromName(sensorId) != null)
+						if (mc.getConfiguration().getSensorFromName(sensorId) != null)
 						{
-							microcontroller.deleteSensor(sensorId);
+							mc.deleteSensor(sensorId);
 						}
-						
+
 						// Add the newly sensor
-						microcontroller.addSensor(new SensorDescriptor(sensorId, sensorPin, sensorFreq));
-						
+						mc.addSensor(new SensorDescriptor(sensorId, sensorPin, sensorFreq));
+
 						// Map sensor with its own endpoint
-						microcontroller.mapSensor(sensorId, sensorEndpointIP, sensorEndpointPort);
+						if (sensorEndpointIP != null && sensorEndpointPort > 0)
+							mc.mapSensor(sensorId, sensorEndpointIP, sensorEndpointPort);
 					}
 				} catch (ControllerException e) {
 					System.err.println("ControllerException in ConfigResource");

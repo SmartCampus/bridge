@@ -14,6 +14,10 @@ public class BridgeRestApi
 extends Application
 {
 
+	/**
+	 * Create the inbound root
+	 * @return A Restlet router object
+	 */
 public Restlet createInboundRoot()
 {
    // Create router from contexte

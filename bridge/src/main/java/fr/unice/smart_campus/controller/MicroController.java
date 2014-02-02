@@ -4,7 +4,6 @@ package fr.unice.smart_campus.controller;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.data.SensorHistory;
-import fr.unice.smart_campus.restclient.BufferedRestClient;
 
 /**
  * 

@@ -23,8 +23,8 @@ public class BufferedRestClient {
 	private List<JSONObject> buffer;
 	private String endpoint;
 	private int port;
-	ClientResource clientRessource;
-	Client client;
+	private ClientResource clientRessource;
+	private Client client;
 	
 	public BufferedRestClient(String endpoint, int port)
 	{
@@ -49,14 +49,12 @@ public class BufferedRestClient {
 	}
 
 	private void sendDatas() {
-		JSONObject dataSensorJson = new JSONObject();
 		JSONArray dataArrayJson = new JSONArray(buffer);
-		dataSensorJson.accumulate("values", dataArrayJson);
 		
 		System.out.println("Send data: " + "http://" + endpoint + ":" + port + "/collector/value");
 		
 		clientRessource.setNext(client);
-		StringRepresentation strRepresentation = new StringRepresentation(dataSensorJson.toString());
+		StringRepresentation strRepresentation = new StringRepresentation(dataArrayJson.toString());
 		strRepresentation.setMediaType(MediaType.APPLICATION_JSON);
 		
 		try {
