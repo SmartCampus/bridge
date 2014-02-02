@@ -33,7 +33,16 @@ extends ServerResource
 	{
 		// Get the JSON configuration object
 		JSONArray jsonArray = new JSONArray(new JSONObject(jsonString).get("config_sensors").toString());
-
+		
+		// Reset all connected boards
+		for (MicroController mc : Main.microControllers)
+			try {
+				mc.resetController();
+			} catch (ControllerException e1) {
+				System.err.println("Error while reseting boards");
+				e1.printStackTrace();
+			}
+		
 		// For each sensor, do
 		for (int i = 0; i < jsonArray.length(); i++)
 		{
@@ -62,9 +71,6 @@ extends ServerResource
 			for (MicroController mc : Main.microControllers)
 			{
 				try {
-
-					// Reset board
-					mc.resetController();
 
 					if (mc.getBoardId().equals(boardName))
 					{
