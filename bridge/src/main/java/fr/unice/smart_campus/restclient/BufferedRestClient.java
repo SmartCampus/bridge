@@ -18,7 +18,7 @@ import fr.unice.smart_campus.data.SensorData;
 
 public class BufferedRestClient {
 	
-	public final int BUFFER_MAX_SIZE = 3;
+	public final int BUFFER_MAX_SIZE = 10;
 	
 	private List<JSONObject> buffer;
 	private String endpoint;
@@ -42,6 +42,7 @@ public class BufferedRestClient {
 		sdJson.accumulate("v", sd.getSensorValue());
 		sdJson.accumulate("t", sd.getSensorTime());
 		buffer.add(sdJson);
+		
 		if (buffer.size() == BUFFER_MAX_SIZE)
 		{
 			sendDatas();
