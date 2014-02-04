@@ -268,11 +268,14 @@ throws IOException, ControllerException
    scanner.close();
 }
 
-
+/**
+ * Send a data to the appropriate collector
+ * @param sd A sensor data
+ */
 public void sendToCollector(SensorData sd) {
-	if (getMapping(sd.getSensorName()) != null){
-		this.sensorsEndpoints.get(sd.getSensorName()).fill(sd);
-	}
+	BufferedRestClient mapping = getMapping(sd.getSensorName());
+	if (mapping != null)
+		mapping.fill(sd);
 		
 }
 }
