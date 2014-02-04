@@ -67,15 +67,26 @@ public class BufferedRestClient {
 		buffer.clear();
 		
 	}
-
+	/**
+	 * Get the endpoint ip/hostname
+	 * @return Endpoint ip/hostname
+	 */
 	public String getEndpoint() {
 		return endpoint;
 	}
 
+	/**
+	 * Get the endpoint port
+	 * @return Endpoint port
+	 */
 	public int getPort() {
 		return port;
 	}
 	
+	/**
+	 * Get the amount of data waiting to being send
+	 * @return Number of data not already sent
+	 */
 	public int getWaitingQueueSize()
 	{
 		return this.buffer.size();
