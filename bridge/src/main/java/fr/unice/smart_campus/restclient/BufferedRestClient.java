@@ -15,9 +15,15 @@ import org.restlet.resource.ClientResource;
 
 import fr.unice.smart_campus.data.SensorData;
 
-
+/**
+ * BufferedRestClient
+ * A buffered rest client class
+ * @author Cyril Cecchinel
+ *
+ */
 public class BufferedRestClient {
 	
+	// Set buffer size
 	public final int BUFFER_MAX_SIZE = 3;
 	
 	private List<JSONObject> buffer;
@@ -26,6 +32,11 @@ public class BufferedRestClient {
 	private ClientResource clientRessource;
 	private Client client;
 	
+	/**
+	 * Create a buffered rest client
+	 * @param endpoint Collector IP
+	 * @param port Collector port
+	 */
 	public BufferedRestClient(String endpoint, int port)
 	{
 		this.endpoint = endpoint;
@@ -35,6 +46,10 @@ public class BufferedRestClient {
 		this.client = new Client(new Context(), Protocol.HTTP);
 	}
 	
+	/**
+	 * Fill the buffer
+	 * @param sd Sensor data
+	 */
 	public void fill(SensorData sd)
 	{
 		JSONObject sdJson = new JSONObject();
@@ -48,6 +63,9 @@ public class BufferedRestClient {
 		}
 	}
 
+	/**
+	 * Send data when the buffer is full
+	 */
 	private void sendDatas() {
 		JSONArray dataArrayJson = new JSONArray(buffer);
 		
@@ -73,6 +91,7 @@ public class BufferedRestClient {
 		buffer.clear();
 		
 	}
+	
 	/**
 	 * Get the endpoint ip/hostname
 	 * @return Endpoint ip/hostname
