@@ -63,8 +63,12 @@ public class BufferedRestClient {
 			System.err.println("Error while sending data to collector");
 			e.printStackTrace();
 		}
-		clientRessource.getRequestEntity().release();
-		clientRessource.release();
+		try {
+			client.stop();
+		} catch (Exception e) {
+			System.err.println("Error while stopping collector connection");
+			e.printStackTrace();
+		}
 		
 		buffer.clear();
 		
