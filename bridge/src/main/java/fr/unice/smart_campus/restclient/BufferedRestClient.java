@@ -63,7 +63,9 @@ public class BufferedRestClient {
 			System.err.println("Error while sending data to collector");
 			e.printStackTrace();
 		}
+		clientRessource.getRequestEntity().release();
 		clientRessource.release();
+		
 		buffer.clear();
 		
 	}
