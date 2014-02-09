@@ -206,6 +206,7 @@ public void unmapSensor(String sensorName)
 public void clear()
 {
    sensorsDescriptions.clear();
+   sensorsEndpoints.clear();
 }
 
 
