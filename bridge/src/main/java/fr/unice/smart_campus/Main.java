@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.restserver.BridgeRestServer;
 
 /**
@@ -33,8 +34,6 @@ throws Exception
 {
    // Build the configuration.
    File configFile = new File(args[0]);
-   if (configFile == null)
-      System.out.println("The file : " + configFile.getCanonicalPath() + " does not exist.");
    Configuration programConfig = new Configuration(configFile);
 
    // Build the connection.
@@ -42,11 +41,6 @@ throws Exception
    {
       microControllers.add(programConfig.createMicroController(n));
    }
-
-   /*MicroController ctrl =  microControllers.get(0);
-   ctrl.resetController();
-   ctrl.addSensor(new SensorDescriptor("t1 2 3"));
-   ctrl.addSensor(new SensorDescriptor("t2 4 5"));*/
 
    new BridgeRestServer(9001);
 }

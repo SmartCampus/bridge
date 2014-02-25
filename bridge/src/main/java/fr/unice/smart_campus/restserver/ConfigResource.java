@@ -37,6 +37,7 @@ extends ServerResource
 		// Reset all boards
 		for (MicroController mc : Main.microControllers)
 		{
+			System.err.println("[IMPORTANT] Resetting all boards !");
 			try {
 				mc.resetController();
 			} catch (ControllerException e) {

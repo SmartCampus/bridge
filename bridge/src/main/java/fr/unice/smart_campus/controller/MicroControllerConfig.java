@@ -135,7 +135,7 @@ throws IOException, ControllerException
    if (!(sensorsDescriptions.contains(sensor)))
    {
       sensorsDescriptions.add(sensor);
-      writeToFile();
+      //writeToFile();
       return;
    }
 
@@ -165,7 +165,7 @@ throws IOException
       }
    }
 
-   writeToFile();
+   //writeToFile();
 }
 
 /**

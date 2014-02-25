@@ -476,8 +476,10 @@ public void unmapSensor(String sname) {
 }
 
 
-public String getBoardTimestamp() throws ControllerException {
+public long getBoardTimestamp() throws ControllerException {
 	// TODO Implement timestamp on Phidget
-	return null;
+	return 0;
 }
+
+
 }

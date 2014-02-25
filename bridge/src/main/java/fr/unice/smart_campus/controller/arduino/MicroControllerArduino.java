@@ -4,6 +4,7 @@ package fr.unice.smart_campus.controller.arduino;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
@@ -53,6 +54,9 @@ private long systemTimestamp;
 /** Micro controller initial timestamp */
 private long boardTimestamp;
 
+/** Micro controller name **/
+private String boardName;
+
 /**
  * Default constructor.
  * 
@@ -76,7 +80,9 @@ throws InterruptedException, IOException, ControllerException
    sensorRepository = repository;
    history = new SensorHistory(new File(rdir, "History"), transformer);
    configuration = new MicroControllerConfig(new File(rdir, "controller.cfg"));
-
+   
+   boardName = execCommand("boardid");
+   
    // Wait for micro controller setup termination.
    waitForMessageStartingBy(10000);
 
@@ -84,6 +90,7 @@ throws InterruptedException, IOException, ControllerException
    systemTimestamp = System.currentTimeMillis();
    
    // Set board timestamp
+   boardTimestamp = getBoardTimestamp();
    
    // Recreate all sensor that were store in the configuration.
    SensorDescriptor[] descriptors = configuration.getAllSensors();
@@ -261,17 +268,16 @@ throws ControllerException
 public String getBoardId() 
 throws ControllerException 
 {
-   // Get the board ID.
-	return execCommand("boardid");
+   return this.boardName;
 }
 
 /** Get the micro controller timestamp.
  * 
  * @return The micro controler timestamp
  */
-public String getBoardTimestamp() throws ControllerException {
+public long getBoardTimestamp() throws ControllerException {
 	// Get the board timestamp
-	return execCommand("timestamp");
+	return Long.parseLong(execCommand("timestamp"));
 }
 /**
  * Suspend a sensor (prevent it to send data).
@@ -409,16 +415,16 @@ throws NoSuchFieldException, SecurityException, IOException
 {
    // Build the sensor data.
    SensorData sd = transformer.toSensorData(data);
-   sd.setSensorTime(System.currentTimeMillis());
-
+   long realSensorTimestamp = (this.systemTimestamp + sd.getSensorTime() - this.boardTimestamp) / 1000;
+   System.out.println(realSensorTimestamp);
+   System.out.println(new Date(realSensorTimestamp));
+   
+   // Compute real collect time
+   sd.setSensorTime(realSensorTimestamp);
+   
    // Send data over network if sensor is mapped
    configuration.sendToCollector(sd);
    
-   // Add data to the data history.
-   history.addData(sd);
-
-   // Add data to the data repository.
-   sensorRepository.addData(sd);
 }
 
 
@@ -490,5 +496,7 @@ public void mapSensor(String sname, String endpointIP, int endpointPort) throws 
 public void unmapSensor(String sname) {
 	configuration.unmapSensor(sname);
 }
+
+
 
 }

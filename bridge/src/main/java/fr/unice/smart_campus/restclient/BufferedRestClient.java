@@ -54,8 +54,8 @@ public class BufferedRestClient {
 	{
 		JSONObject sdJson = new JSONObject();
 		sdJson.accumulate("n", sd.getSensorName());
-		sdJson.accumulate("v", sd.getSensorValue());
-		sdJson.accumulate("t", sd.getSensorTime());
+		sdJson.accumulate("v", String.valueOf((int) sd.getSensorValue()));
+		sdJson.accumulate("t", String.valueOf(sd.getSensorTime()));
 		buffer.add(sdJson);
 		if (buffer.size() == BUFFER_MAX_SIZE)
 		{
@@ -70,7 +70,6 @@ public class BufferedRestClient {
 		JSONArray dataArrayJson = new JSONArray(buffer);
 		
 		System.out.println("Send data: " + "http://" + endpoint + ":" + port + "/collector/value");
-		
 		clientRessource.setNext(client);
 		StringRepresentation strRepresentation = new StringRepresentation(dataArrayJson.toString());
 		strRepresentation.setMediaType(MediaType.APPLICATION_JSON);

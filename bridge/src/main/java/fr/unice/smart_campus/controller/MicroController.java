@@ -95,7 +95,7 @@ throws ControllerException;
  * 
  * @throws ControllerException
  */
-public abstract String getBoardTimestamp()
+public abstract long getBoardTimestamp()
 throws ControllerException;
 /**
  * Get the controller sensor data history.
