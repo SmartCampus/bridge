@@ -88,7 +88,15 @@ throws ControllerException;
 public abstract String getBoardId()
 throws ControllerException;
 
-
+/**
+ * Get the board timestamp
+ * 
+ * @return Return board timestamp
+ * 
+ * @throws ControllerException
+ */
+public abstract String getBoardTimestamp()
+throws ControllerException;
 /**
  * Get the controller sensor data history.
  * 

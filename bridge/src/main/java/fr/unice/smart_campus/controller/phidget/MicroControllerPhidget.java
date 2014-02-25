@@ -65,6 +65,11 @@ private DataTransformer transformer;
 /** Log stream */
 private PrintStream logStream = System.out;
 
+/** Phidget start timestamp */
+private long systemTimestamp;
+
+/** Phidget initial timestamp */
+private long boardTimestamp;
 
 /**
  * Default constructor.
@@ -88,6 +93,7 @@ throws ControllerException, IOException, PhidgetException
    history = new SensorHistory(new File(rdir, "History"), transformer);
    phidgetBoard = open(phidgetSerial);
    timerRepository = new SensorTimerRepository(this);
+   systemTimestamp = System.currentTimeMillis();
 }
 
 
@@ -427,6 +433,8 @@ throws PhidgetException
             repository.addData(sd);
             try
             {
+               // Send data over network if sensor is mapped
+               configuration.sendToCollector(sd);
                history.addData(sd);
             }
             catch (IOException e)
@@ -465,5 +473,11 @@ public void mapSensor(String sname, String endpointIP, int endpointPort) throws 
  */
 public void unmapSensor(String sname) {
 	configuration.unmapSensor(sname);
+}
+
+
+public String getBoardTimestamp() throws ControllerException {
+	// TODO Implement timestamp on Phidget
+	return null;
 }
 }

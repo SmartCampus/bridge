@@ -47,6 +47,11 @@ private DataTransformer transformer;
 /** Micro controller configuration */
 private MicroControllerConfig configuration;
 
+/** Micro controller start timestamp */
+private long systemTimestamp;
+
+/** Micro controller initial timestamp */
+private long boardTimestamp;
 
 /**
  * Default constructor.
@@ -75,11 +80,15 @@ throws InterruptedException, IOException, ControllerException
    // Wait for micro controller setup termination.
    waitForMessageStartingBy(10000);
 
+   // Set system timestamp
+   systemTimestamp = System.currentTimeMillis();
+   
+   // Set board timestamp
+   
    // Recreate all sensor that were store in the configuration.
    SensorDescriptor[] descriptors = configuration.getAllSensors();
    for (SensorDescriptor sd : descriptors)
       addSensorInternal(sd);
-
 }
 
 
@@ -256,7 +265,14 @@ throws ControllerException
 	return execCommand("boardid");
 }
 
-
+/** Get the micro controller timestamp.
+ * 
+ * @return The micro controler timestamp
+ */
+public String getBoardTimestamp() throws ControllerException {
+	// Get the board timestamp
+	return execCommand("timestamp");
+}
 /**
  * Suspend a sensor (prevent it to send data).
  * 
@@ -474,6 +490,5 @@ public void mapSensor(String sname, String endpointIP, int endpointPort) throws 
 public void unmapSensor(String sname) {
 	configuration.unmapSensor(sname);
 }
-
 
 }
