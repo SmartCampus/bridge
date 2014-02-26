@@ -81,10 +81,12 @@ throws InterruptedException, IOException, ControllerException
    history = new SensorHistory(new File(rdir, "History"), transformer);
    configuration = new MicroControllerConfig(new File(rdir, "controller.cfg"));
    
-   boardName = execCommand("boardid");
    
    // Wait for micro controller setup termination.
    waitForMessageStartingBy(10000);
+
+   // Get board name
+   boardName = execCommand("boardid");
 
    // Set system timestamp
    systemTimestamp = System.currentTimeMillis();

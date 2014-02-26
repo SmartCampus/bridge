@@ -29,7 +29,7 @@ private SerialPort port;
 private String portName;
 
 /** Port time out */
-private static final int TIME_OUT = 2000;
+private static final int TIME_OUT = 8000;
 
 /** Default bits per second for CMD port */
 private static final int DATA_RATE = 9600;
