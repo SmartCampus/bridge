@@ -24,7 +24,7 @@ import fr.unice.smart_campus.data.SensorData;
 public class BufferedRestClient {
 	
 	// Set buffer size
-	public final int BUFFER_MAX_SIZE = 3;
+	public final int BUFFER_MAX_SIZE = 100;
 	
 	private List<JSONObject> buffer;
 	private String endpoint;
