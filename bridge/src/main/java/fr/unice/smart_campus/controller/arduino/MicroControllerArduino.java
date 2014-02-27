@@ -418,8 +418,6 @@ throws NoSuchFieldException, SecurityException, IOException
    // Build the sensor data.
    SensorData sd = transformer.toSensorData(data);
    long realSensorTimestamp = (this.systemTimestamp + sd.getSensorTime() - this.boardTimestamp) / 1000;
-   System.out.println(realSensorTimestamp);
-   System.out.println(new Date(realSensorTimestamp));
    
    // Compute real collect time
    sd.setSensorTime(realSensorTimestamp);
