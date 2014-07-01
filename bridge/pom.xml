@@ -32,6 +32,13 @@
 			<systemPath>${basedir}/lib/phidget21.jar</systemPath>
 			<version>1.0.0</version>
 		</dependency>
+        <dependency>
+            <artifactId>com.rapplogic</artifactId>
+            <groupId>com.rapplogic</groupId>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/xbee-api-0.9.jar</systemPath>
+            <version>0.9.0</version>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-resources-plugin</artifactId>

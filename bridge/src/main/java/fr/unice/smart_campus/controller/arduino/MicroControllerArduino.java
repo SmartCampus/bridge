@@ -450,7 +450,7 @@ private void addSensorInternal(SensorDescriptor sd)
 throws ControllerException
 {
    // Build the string add command
-   String command = "add " + sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency();
+   String command = "add " + sd.getSensorName() + " " + sd.getPinNumber() + " " + sd.getFrequency() + " " +  "0"; //TODO: Handle type
    execCommand(command);
 }
 

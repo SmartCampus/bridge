@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import com.rapplogic.xbee.api.XBeeAddress16;
+import fr.unice.smart_campus.cnx.XBeeConnection;
 import org.json.JSONObject;
 
 import fr.unice.smart_campus.cnx.ControllerConnection;
@@ -102,6 +104,14 @@ throws Exception
       ControllerConnection connection;
       if (connectionType.equals("serial"))
          connection = new SerialConnection(portName);
+      else if (connectionType.equals("xbee")){
+          String address = controller.getString("address");
+          int[] ints = new int[address.length()];
+          for (int i = 0; i<address.length(); i++)
+              ints[i] = Integer.parseInt(String.valueOf(address.charAt(i)));
+
+          connection = new XBeeConnection(portName, new XBeeAddress16(ints));
+      }
       else
          throw new Exception("Connection type : " + connectionType + " unknown.");
 
