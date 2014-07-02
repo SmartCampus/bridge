@@ -1,9 +1,7 @@
 package fr.unice.smart_campus.restclient;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
+import fr.unice.smart_campus.data.SensorData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.restlet.Client;
@@ -13,7 +11,8 @@ import org.restlet.data.Protocol;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 
-import fr.unice.smart_campus.data.SensorData;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BufferedRestClient

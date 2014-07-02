@@ -1,12 +1,13 @@
 
 package fr.unice.smart_campus.data;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test of the SensorData class.

@@ -1,6 +1,11 @@
 
 package fr.unice.smart_campus.controller;
 
+import fr.unice.smart_campus.data.ControllerException;
+import fr.unice.smart_campus.data.SensorData;
+import fr.unice.smart_campus.data.SensorDescriptor;
+import fr.unice.smart_campus.restclient.BufferedRestClient;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,11 +13,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-
-import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.SensorData;
-import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.restclient.BufferedRestClient;
 
 /**
  * Represents the MicroController config. This class is responsible for : 

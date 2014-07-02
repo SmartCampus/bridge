@@ -1,12 +1,6 @@
 
 package fr.unice.smart_campus.stress;
 
-import java.io.File;
-
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
 import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
@@ -15,6 +9,11 @@ import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.data.SensorDescriptor;
 import fr.unice.smart_campus.transformer.DataTransformer;
 import fr.unice.smart_campus.transformer.JsonTransformer;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import java.io.File;
 
 /**
  * This class test the solidity of the connection code. 

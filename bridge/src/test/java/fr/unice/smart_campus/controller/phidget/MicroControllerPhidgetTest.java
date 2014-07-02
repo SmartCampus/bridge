@@ -1,24 +1,21 @@
 
 package fr.unice.smart_campus.controller.phidget;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.io.File;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
 import fr.unice.smart_campus.Configuration;
 import fr.unice.smart_campus.Constants;
 import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.controller.MicroControllerConfig;
 import fr.unice.smart_campus.data.ControllerException;
 import fr.unice.smart_campus.data.SensorDescriptor;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+import java.io.File;
+
+import static org.junit.Assert.*;
 
 /**
  * Test the MicroControllerPhidgetTest.java . 

@@ -1,14 +1,14 @@
 
 package fr.unice.smart_campus.data;
 
+import fr.unice.smart_campus.transformer.DataTransformer;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import fr.unice.smart_campus.transformer.DataTransformer;
 
 /**
  * This class manage the history of sensor values for all sensors of one micro controller. 

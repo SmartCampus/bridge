@@ -1,22 +1,21 @@
 
 package fr.unice.smart_campus.controller;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-
+import fr.unice.smart_campus.Configuration;
+import fr.unice.smart_campus.Constants;
+import fr.unice.smart_campus.data.ControllerException;
+import fr.unice.smart_campus.data.SensorDescriptor;
+import fr.unice.smart_campus.data.SensorValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import fr.unice.smart_campus.Configuration;
-import fr.unice.smart_campus.Constants;
-import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.data.SensorValue;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test if a data has been received at the good frequency.

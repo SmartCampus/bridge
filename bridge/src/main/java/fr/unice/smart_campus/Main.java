@@ -1,13 +1,12 @@
 
 package fr.unice.smart_campus;
 
+import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.restserver.BridgeRestServer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.restserver.BridgeRestServer;
 
 /**
  * Main launcher of the program. 

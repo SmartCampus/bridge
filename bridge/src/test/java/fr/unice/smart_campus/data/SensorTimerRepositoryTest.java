@@ -1,25 +1,23 @@
 
 package fr.unice.smart_campus.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.io.IOException;
-
+import com.phidgets.PhidgetException;
+import fr.unice.smart_campus.Configuration;
+import fr.unice.smart_campus.Constants;
+import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
+import fr.unice.smart_campus.transformer.DataTransformer;
+import fr.unice.smart_campus.transformer.JsonTransformer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.phidgets.PhidgetException;
+import java.io.File;
+import java.io.IOException;
 
-import fr.unice.smart_campus.Configuration;
-import fr.unice.smart_campus.Constants;
-import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
-import fr.unice.smart_campus.transformer.DataTransformer;
-import fr.unice.smart_campus.transformer.JsonTransformer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test of the class SensorTimerRepository.

@@ -1,16 +1,15 @@
 
 package fr.unice.smart_campus.restserver;
 
+import fr.unice.smart_campus.Main;
+import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.data.ControllerException;
+import fr.unice.smart_campus.data.SensorDescriptor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
-
-import fr.unice.smart_campus.Main;
-import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.SensorDescriptor;
 
 /**
  * Configuration Resource class

@@ -1,10 +1,9 @@
 
 package fr.unice.smart_campus.transformer;
 
-import org.json.JSONObject;
-
 import fr.unice.smart_campus.data.SensorData;
 import fr.unice.smart_campus.data.SensorValue;
+import org.json.JSONObject;
 
 /**
  * Transform miscellanous objects in a JSON format.

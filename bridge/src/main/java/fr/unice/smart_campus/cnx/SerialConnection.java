@@ -1,10 +1,7 @@
 
 package fr.unice.smart_campus.cnx;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
+import gnu.io.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,27 +72,30 @@ throws Exception
       throw new IOException("Could not find port : " + portName);
    }
 
-   // Open the serial. 
-   port = (SerialPort) portId.open(this.getClass().getName(), TIME_OUT);
+    try {
+        // Open the serial.
+        port = (SerialPort) portId.open(this.getClass().getName(), TIME_OUT);
 
-   // Set port parameters.
-   port.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        // Set port parameters.
+        port.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
-   // Open the streams.
-   input = port.getInputStream();
-   output = port.getOutputStream();
-   Thread.sleep(1000);
+        // Open the streams.
+        input = port.getInputStream();
+        output = port.getOutputStream();
+        Thread.sleep(1000);
 
-   // Add events on the serial port.
-   port.addEventListener(new SerialPortEventListener()
-   {
+        // Add events on the serial port.
+        port.addEventListener(new SerialPortEventListener() {
 
-      public void serialEvent(SerialPortEvent arg0)
-      {
-         processReceivedEvent(arg0);
-      }
-   });
-   port.notifyOnDataAvailable(true);
+            public void serialEvent(SerialPortEvent arg0) {
+                processReceivedEvent(arg0);
+            }
+        });
+        port.notifyOnDataAvailable(true);
+    }
+    catch (PortInUseException e){
+        System.err.println("Can't open port " + portN + " (already used)");
+    }
 
 }
 

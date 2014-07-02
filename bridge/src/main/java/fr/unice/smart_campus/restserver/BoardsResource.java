@@ -1,15 +1,14 @@
 
 package fr.unice.smart_campus.restserver;
 
+import fr.unice.smart_campus.Main;
+import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.data.ControllerException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-
-import fr.unice.smart_campus.Main;
-import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.ControllerException;
 
 /**
  * Board Resource class

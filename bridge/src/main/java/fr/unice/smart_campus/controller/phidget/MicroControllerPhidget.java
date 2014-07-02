@@ -1,35 +1,18 @@
 
 package fr.unice.smart_campus.controller.phidget;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import com.phidgets.InterfaceKitPhidget;
 import com.phidgets.Phidget;
 import com.phidgets.PhidgetException;
-import com.phidgets.event.AttachEvent;
-import com.phidgets.event.AttachListener;
-import com.phidgets.event.DetachEvent;
-import com.phidgets.event.DetachListener;
-import com.phidgets.event.ErrorEvent;
-import com.phidgets.event.ErrorListener;
-import com.phidgets.event.InputChangeEvent;
-import com.phidgets.event.InputChangeListener;
-import com.phidgets.event.OutputChangeEvent;
-import com.phidgets.event.OutputChangeListener;
-import com.phidgets.event.SensorChangeEvent;
-import com.phidgets.event.SensorChangeListener;
-
+import com.phidgets.event.*;
 import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.controller.MicroControllerConfig;
-import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.CurrentSensorDataRepository;
-import fr.unice.smart_campus.data.SensorData;
-import fr.unice.smart_campus.data.SensorDescriptor;
-import fr.unice.smart_campus.data.SensorHistory;
-import fr.unice.smart_campus.data.SensorTimerRepository;
+import fr.unice.smart_campus.data.*;
 import fr.unice.smart_campus.transformer.DataTransformer;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * This class represent a Phidget micro controller.

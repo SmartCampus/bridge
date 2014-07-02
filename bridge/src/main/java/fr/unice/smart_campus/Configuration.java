@@ -1,22 +1,21 @@
 
 package fr.unice.smart_campus;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import com.rapplogic.xbee.api.XBeeAddress16;
-import fr.unice.smart_campus.cnx.XBeeConnection;
-import org.json.JSONObject;
-
 import fr.unice.smart_campus.cnx.ControllerConnection;
 import fr.unice.smart_campus.cnx.SerialConnection;
+import fr.unice.smart_campus.cnx.XBeeConnection;
 import fr.unice.smart_campus.controller.MicroController;
 import fr.unice.smart_campus.controller.arduino.MicroControllerArduino;
 import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
 import fr.unice.smart_campus.data.CurrentSensorDataRepository;
 import fr.unice.smart_campus.transformer.DataTransformer;
 import fr.unice.smart_campus.transformer.JsonTransformer;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
  * Create the configuration of the all program.
@@ -109,8 +108,8 @@ throws Exception
           int[] ints = new int[address.length()];
           for (int i = 0; i<address.length(); i++)
               ints[i] = Integer.parseInt(String.valueOf(address.charAt(i)));
-
-          connection = new XBeeConnection(portName, new XBeeAddress16(ints));
+          //System.out.println(Arrays.toString(ints));
+          connection = new XBeeConnection(portName, new XBeeAddress16(0,1));
       }
       else
          throw new Exception("Connection type : " + connectionType + " unknown.");

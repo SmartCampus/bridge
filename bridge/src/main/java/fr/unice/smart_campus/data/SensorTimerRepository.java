@@ -1,11 +1,11 @@
 
 package fr.unice.smart_campus.data;
 
+import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import fr.unice.smart_campus.controller.phidget.MicroControllerPhidget;
 
 /**
  * This class manages a timer linked to a sensor.

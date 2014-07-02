@@ -1,22 +1,21 @@
 
 package fr.unice.smart_campus.controller.arduino;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-
+import fr.unice.smart_campus.Configuration;
+import fr.unice.smart_campus.Constants;
+import fr.unice.smart_campus.controller.MicroController;
+import fr.unice.smart_campus.data.ControllerException;
+import fr.unice.smart_campus.data.SensorDescriptor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import fr.unice.smart_campus.Configuration;
-import fr.unice.smart_campus.Constants;
-import fr.unice.smart_campus.controller.MicroController;
-import fr.unice.smart_campus.data.ControllerException;
-import fr.unice.smart_campus.data.SensorDescriptor;
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit test of the MicroController class.

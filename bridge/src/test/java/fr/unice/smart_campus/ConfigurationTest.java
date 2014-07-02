@@ -1,16 +1,16 @@
 
 package fr.unice.smart_campus;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import static org.junit.Assert.*;
 
 /**
  * Test of Configuration class.

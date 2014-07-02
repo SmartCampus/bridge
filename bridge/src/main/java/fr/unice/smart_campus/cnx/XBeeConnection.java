@@ -66,7 +66,6 @@ public class XBeeConnection implements ControllerConnection {
     @Override
     public void sendMessage(String str) throws IOException, InterruptedException {
         int[] payload = toIntArray(str);
-
         // Build request
         TxRequest16 tx = new TxRequest16(destination, payload);
 
@@ -76,7 +75,7 @@ public class XBeeConnection implements ControllerConnection {
             if (!status.isSuccess())
                 System.err.println("No response received");
         } catch (XBeeException e) {
-            System.err.println("Xbee exception");
+            System.err.println("XBee exception");
             e.printStackTrace();
         }
 
@@ -115,17 +114,31 @@ public class XBeeConnection implements ControllerConnection {
 
 
     private class PacketHandler implements PacketListener{
+       StringBuffer strb = new StringBuffer();
 
         @Override
         public void processResponse(XBeeResponse response){
+
             if (response.getApiId() == ApiId.RX_16_RESPONSE) {
                 RxResponse16 rx = (RxResponse16) response;
 
                 // get data
                 String inputLine = buildStringFromInts(rx.getData());
 
-                if ((listener != null) && (inputLine != null))
-                    listener.messageReceived(inputLine);
+                if ((listener != null) && (inputLine != null)){
+                    if (inputLine.contains("\n") || inputLine.contains("\r")){
+
+                        strb.append(inputLine);
+                        System.out.println("Received line : " + strb.toString());
+
+                        listener.messageReceived(strb.toString());
+                        strb = new StringBuffer();
+                    }
+                    else {
+                        strb.append(inputLine);
+                    }
+                }
+
         }
     }
 

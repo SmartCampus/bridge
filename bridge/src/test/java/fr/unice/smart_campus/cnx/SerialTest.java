@@ -1,11 +1,11 @@
 
 package fr.unice.smart_campus.cnx;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Serial connection class tests.

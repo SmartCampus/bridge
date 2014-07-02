@@ -1,21 +1,17 @@
 
 package fr.unice.smart_campus.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-
+import fr.unice.smart_campus.transformer.DataTransformer;
+import fr.unice.smart_campus.transformer.JsonTransformer;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import fr.unice.smart_campus.transformer.DataTransformer;
-import fr.unice.smart_campus.transformer.JsonTransformer;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for the the SensorHistory class.
