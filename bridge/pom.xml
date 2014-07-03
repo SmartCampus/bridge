@@ -13,11 +13,19 @@
 			<name>bridge</name>
 			<url>http://maven.apache.org</url>
 		</repository>
+
 		<repository>
 			<id>maven-restlet</id>
 			<name>Public online Restlet repository</name>
 			<url>http://maven.restlet.org</url>
 		</repository>
+
+        <repository>
+            <id>releases</id>
+            <name>I3S Maven Snapshots Repository</name>
+
+            <url>http://nyx.unice.fr:9007/nexus/content/repositories/i3s-public</url>
+        </repository>
 	</repositories>
 
 	<properties>
@@ -26,18 +34,14 @@
 
 	<dependencies>
 		<dependency>
-			<artifactId>com.phidgets</artifactId>
-			<groupId>com.phidgets</groupId>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/phidget21.jar</systemPath>
-			<version>1.0.0</version>
+            <groupId>com.phidgets</groupId>
+            <artifactId>phidgets</artifactId>
+            <version>2.1.0</version>
 		</dependency>
         <dependency>
+            <groupId>com.rapplogic</groupId>
             <artifactId>xbee</artifactId>
-            <groupId>com.rapplogic.xbee</groupId>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xbee-api-0.9.jar</systemPath>
-            <version>0.9.0</version>
+            <version>0.9</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
@@ -73,35 +77,45 @@
 
     </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>fr.unice.smart_campus.Main</mainClass>
-					<arguments>
-						<argument>run/config.cfg</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <profiles>
+
+        <!-- Run the Generator GUI. -->
+        <profile>
+            <id>run</id>
+            <build>
+                <defaultGoal>compile</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- argLine>-Xms1000m -Xmx1000m -XX:MaxPermSize=2048m</argLine-->
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <!-- automatically creates the classpath using all project
+                dependencies,
+                                     also adding the project build directory -->
+                                <classpath />
+                                <argument>fr.unice.smart_campus.Main</argument>
+                                <argument>run/config.cfg</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+
+    </profiles>
 
 </project>
