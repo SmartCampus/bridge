@@ -477,7 +477,7 @@ public class MicroControllerArduino
         long endTime = System.currentTimeMillis() + timeout;
 
         // Wait until the expected message arrive.
-        while ((receivedResponse == null) || !(receivedResponse.startsWith(expectedMessageStart)))
+        while ((receivedResponse == null) || !(receivedResponse.contains(expectedMessageStart)))
         {
             long cTime = System.currentTimeMillis();
             if (cTime >= endTime)

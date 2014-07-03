@@ -31,7 +31,9 @@ public static ArrayList<MicroController> microControllers = new ArrayList<MicroC
 public static void main(String[] args)
 throws Exception
 {
-   // Build the configuration.
+    new BridgeRestServer(9001);
+
+    // Build the configuration.
    File configFile = new File(args[0]);
    Configuration programConfig = new Configuration(configFile);
 
@@ -41,7 +43,6 @@ throws Exception
       microControllers.add(programConfig.createMicroController(n));
    }
 
-   new BridgeRestServer(9001);
 }
 
 
