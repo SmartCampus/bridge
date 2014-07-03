@@ -80,7 +80,7 @@ public class MicroControllerArduino
         reboot();
 
         // Wait for micro controller setup termination.
-        waitForMessageStartingBy(10000);
+        waitForMessageStartingBy(20000);
 
         // Get board name
         boardName = execCommand("boardid");
@@ -143,7 +143,7 @@ public class MicroControllerArduino
             connection.sendMessage(cmd);
 
             // Wait for response.
-            waitForMessageStartingBy(20000);
+            waitForMessageStartingBy(30000);
         }
         catch (Exception e)
         {
