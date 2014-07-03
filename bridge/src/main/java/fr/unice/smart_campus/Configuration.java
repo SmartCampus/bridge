@@ -105,11 +105,9 @@ throws Exception
          connection = new SerialConnection(portName);
       else if (connectionType.equals("xbee")){
           String address = controller.getString("address");
-          int[] ints = new int[address.length()];
-          for (int i = 0; i<address.length(); i++)
-              ints[i] = Integer.parseInt(String.valueOf(address.charAt(i)));
-          //System.out.println(Arrays.toString(ints));
-          connection = new XBeeConnection(portName, new XBeeAddress16(0,1));
+          int msb = Integer.parseInt(address.substring(0,2));
+          int lsb = Integer.parseInt(address.substring(2,4));
+          connection = new XBeeConnection(portName, new XBeeAddress16(msb,lsb));
       }
       else
          throw new Exception("Connection type : " + connectionType + " unknown.");
