@@ -29,6 +29,9 @@ public class XBeeConnection implements ControllerConnection {
     /** Xbee destination address */
     private XBeeAddress16 destination = null;
 
+    /** Prevent duplicate messages */
+    private String echoPrevention = "";
+
     public XBeeConnection(String portN, XBeeAddress16 destination) throws Exception {
         this.portName = portN;
         this.port = new XBee();
@@ -68,16 +71,20 @@ public class XBeeConnection implements ControllerConnection {
         int[] payload = toIntArray(str);
         // Build request
         TxRequest16 tx = new TxRequest16(destination, payload);
-
+        System.out.println("Sending " + str + "...");
         // Send request and wait for status response
         try {
-            TxStatusResponse status = (TxStatusResponse) port.sendSynchronous(tx);
-            if (!status.isSuccess())
-                System.err.println("No response received");
+            TxStatusResponse status = null;
+            while (status == null || !status.isSuccess())
+                 status = (TxStatusResponse) port.sendSynchronous(tx);
+
+
         } catch (XBeeException e) {
             System.err.println("XBee exception");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
+
+        port.clearResponseQueue();
 
 
 
@@ -125,14 +132,20 @@ public class XBeeConnection implements ControllerConnection {
                 // get data
                 String inputLine = buildStringFromInts(rx.getData());
 
-                if ((listener != null) && (inputLine != null)){
-                    if (inputLine.contains("\n") || inputLine.contains("\r")){
+                if ((listener != null) && (inputLine != null) && (!inputLine.contains("SND"))){
+                    if ((inputLine.contains("\n")) || (inputLine.contains("\r"))){
 
                         strb.append(inputLine);
-                        System.out.println("Received line : " + strb.toString());
-
-                        listener.messageReceived(strb.toString());
+                        // If message received != previous message received
+                        if (!strb.toString().equals(echoPrevention)) {
+                                    echoPrevention = strb.toString();
+                                    System.out.println("Received: " + strb.toString());
+                                    listener.messageReceived(strb.toString());
+                        } else {
+                            System.err.println("Echo message received... dropping");
+                        }
                         strb = new StringBuffer();
+
                     }
                     else {
                         strb.append(inputLine);

@@ -76,6 +76,7 @@ public class MicroControllerArduino
         history = new SensorHistory(new File(rdir, "History"), transformer);
         configuration = new MicroControllerConfig(new File(rdir, "controller.cfg"));
 
+        System.out.println("Init configuration");
         // Reboot the platform
         reboot();
 
@@ -83,7 +84,7 @@ public class MicroControllerArduino
         waitForMessageStartingBy(20000);
 
         // Get board name
-        boardName = execCommand("boardid");
+        boardName = getBoardId();
 
         // Set system timestamp
         systemTimestamp = System.currentTimeMillis();
@@ -95,6 +96,8 @@ public class MicroControllerArduino
         SensorDescriptor[] descriptors = configuration.getAllSensors();
         for (SensorDescriptor sd : descriptors)
             addSensorInternal(sd);
+
+        System.out.println(getBoardId() + " configured");
     }
 
 
@@ -143,17 +146,20 @@ public class MicroControllerArduino
             connection.sendMessage(cmd);
 
             // Wait for response.
-            waitForMessageStartingBy(30000);
+            waitForMessageStartingBy(20000);
         }
         catch (Exception e)
         {
+
             throw new ControllerException(e);
+
         }
 
         // Build the response string.
         String response = receivedResponse.substring(2).trim();
         System.out.println("|MicroController.java->execCommand|:Response: " + response);
         System.out.flush();
+
         if (!(response.startsWith("0")))
             throw new ControllerException(response);
 
@@ -278,6 +284,9 @@ public class MicroControllerArduino
     public String getBoardId()
             throws ControllerException
     {
+        if (this.boardName == null){
+            this.boardName = execCommand("boardid");
+        }
         return this.boardName;
     }
 
@@ -480,8 +489,9 @@ public class MicroControllerArduino
         while ((receivedResponse == null) || !(receivedResponse.contains(expectedMessageStart)))
         {
             long cTime = System.currentTimeMillis();
-            if (cTime >= endTime)
+            if (cTime >= endTime) {
                 throw new IOException("Timeout waiting for message starting by : " + expectedMessageStart);
+            }
             wait(endTime - cTime);
         }
     }
