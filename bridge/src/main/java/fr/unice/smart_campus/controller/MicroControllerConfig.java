@@ -40,7 +40,6 @@ private File configFile;
 /**
  * Default constructor.
  * 
- * @param controller Controller currently in use.
  * @param file       File who contains the micro controller configuration.
  * 
  * @throws IOException         IO Error.

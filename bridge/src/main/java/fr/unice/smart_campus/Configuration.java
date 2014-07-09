@@ -40,7 +40,7 @@ private JSONObject configContent;
 public Configuration(File config)
 throws FileNotFoundException
 {
-   String fileConfig = loadConfigFile(config);
+   String fileConfig = Utils.loadConfigFile(config);
 
    // Load config file as JSONobject.
    configContent = new JSONObject(fileConfig);
@@ -85,11 +85,15 @@ throws Exception
    // Check controller type.
    if (type.equalsIgnoreCase("arduino"))
    {
-      // Get the port name.
-      String portName = getControllerPortName(name);
-
       // Get the connection type.
-      String connectionType = getControllerConnectionType(name);
+       String connectionType = getControllerConnectionType(name);
+
+
+       String portName = null;
+       if (!connectionType.equals("xbee"))
+        // Get the port name. (XBee port is referenced in run/network.cfg and accessed in XBeePort class)
+         portName = getControllerPortName(name);
+
 
       // Get the controller format.
       DataTransformer transformer;
@@ -107,7 +111,7 @@ throws Exception
           String address = controller.getString("address");
           int msb = Integer.parseInt(address.substring(0,2));
           int lsb = Integer.parseInt(address.substring(2,4));
-          connection = new XBeeConnection(portName, new XBeeAddress16(msb,lsb));
+          connection = new XBeeConnection(new XBeeAddress16(msb,lsb));
       }
       else
          throw new Exception("Connection type : " + connectionType + " unknown.");
@@ -248,33 +252,7 @@ private JSONObject getController(String controllerName)
 }
 
 
-/**
- * Load the configuration file in a string.
- * 
- * @param f File to load.
- * 
- * @return The file in a string.
- * 
- * @throws FileNotFoundException 
- */
-private String loadConfigFile(File f)
-throws FileNotFoundException
-{
-   StringBuilder sb = new StringBuilder();
 
-   // Build the return string from the file.
-   Scanner scan = new Scanner(f);
-   while (scan.hasNext())
-   {
-      String line = scan.nextLine().trim();
-      if (line.startsWith("//"))
-         continue;
-      sb.append(line).append("\n");
-   }
-   scan.close();
-
-   return sb.toString();
-}
 
 /**
  * Test program.

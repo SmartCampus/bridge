@@ -2,7 +2,9 @@
 package fr.unice.smart_campus;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Class who contains utilities methods.
@@ -41,6 +43,33 @@ throws IOException
    file.delete();
 }
 
+    /**
+     * Load the configuration file in a string.
+     *
+     * @param f File to load.
+     *
+     * @return The file in a string.
+     *
+     * @throws java.io.FileNotFoundException
+     */
+    public static String loadConfigFile(File f)
+            throws FileNotFoundException
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Build the return string from the file.
+        Scanner scan = new Scanner(f);
+        while (scan.hasNext())
+        {
+            String line = scan.nextLine().trim();
+            if (line.startsWith("//"))
+                continue;
+            sb.append(line).append("\n");
+        }
+        scan.close();
+
+        return sb.toString();
+    }
 
 /**
  * Compare two objects possibly null.
