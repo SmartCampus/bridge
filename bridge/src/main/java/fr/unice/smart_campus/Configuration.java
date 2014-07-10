@@ -90,7 +90,7 @@ throws Exception
 
 
        String portName = null;
-       if (!connectionType.equals("xbee"))
+       if (!connectionType.equalsIgnoreCase("xbee"))
         // Get the port name. (XBee port is referenced in run/network.cfg and accessed in XBeePort class)
          portName = getControllerPortName(name);
 
@@ -105,9 +105,9 @@ throws Exception
 
       // Build the connection.
       ControllerConnection connection;
-      if (connectionType.equals("serial"))
+      if (connectionType.equalsIgnoreCase("serial"))
          connection = new SerialConnection(portName);
-      else if (connectionType.equals("xbee")){
+      else if (connectionType.equalsIgnoreCase("xbee")){
           String address = controller.getString("address");
           int msb = Integer.parseInt(address.substring(0,2));
           int lsb = Integer.parseInt(address.substring(2,4));
