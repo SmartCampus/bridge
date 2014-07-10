@@ -5,6 +5,7 @@ import com.rapplogic.xbee.api.wpan.RxResponse16;
 import com.rapplogic.xbee.api.wpan.TxRequest16;
 import com.rapplogic.xbee.api.wpan.TxStatusResponse;
 import com.rapplogic.xbee.util.ByteUtils;
+import fr.unice.smart_campus.cnx.xbee.XBeePort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 

@@ -1,21 +1,24 @@
-package fr.unice.smart_campus.cnx;
+package fr.unice.smart_campus.cnx.xbee;
 
 import com.rapplogic.xbee.api.*;
 import com.rapplogic.xbee.api.wpan.RxResponse16;
 import com.rapplogic.xbee.util.ByteUtils;
 import fr.unice.smart_campus.Utils;
+import fr.unice.smart_campus.cnx.ControllerConnection;
 import gnu.io.CommPortIdentifier;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * This class represent a hardware XBee port
  * Created by Cyril Cecchinel on 09/07/2014.
  */
-public class XBeePort {
+public class XBeePort implements Observer {
 
     /** Network configuration file */
     private static final String NETWORK_CONFIG_FILE = "run/network.cfg";
@@ -35,6 +38,8 @@ public class XBeePort {
     /** Default bits per second for CMD port */
     private static final int DATA_RATE = 9600;
 
+    /** Incoming message buffer */
+    private XBeeBuffer buffer;
 
     /**
      * Get the XBeePort instance
@@ -67,6 +72,11 @@ public class XBeePort {
      * @throws IOException
      */
     private XBeePort() throws IOException {
+        // Build the buffer
+        this.buffer = new XBeeBuffer();
+        buffer.addObserver(this);
+
+        // Read network configuration file
         File configurationFile = new File(NETWORK_CONFIG_FILE);
         JSONObject confJson = new JSONObject(Utils.loadConfigFile(configurationFile));
 
@@ -123,39 +133,24 @@ public class XBeePort {
         this.listener = listener;
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("[INFO] Received: " + arg);
+        listener.messageReceived((String) arg);
+    }
+
     /**
      * This class handles the reception of a packet
      */
     private class PacketHandler implements PacketListener {
-        StringBuffer strb = new StringBuffer();
-
         @Override
         public void processResponse(XBeeResponse response){
 
             if (response.getApiId() == ApiId.RX_16_RESPONSE) {
-                RxResponse16 rx = (RxResponse16) response;
-
-                // get data
-                String inputLine = ByteUtils.toString(rx.getData());
-
-                if ((listener != null) && (inputLine != null) && (!inputLine.contains("SND"))){
-                    if ((inputLine.contains("\n")) || (inputLine.contains("\r"))){
-
-                        strb.append(inputLine);
-                        System.out.println("Received: " + strb.toString());
-                        listener.messageReceived(strb.toString());
-                        strb = new StringBuffer();
-
-                    }
-                    else {
-                        strb.append(inputLine);
-                    }
-                }
+                buffer.put((RxResponse16) response);
 
             }
         }
-
-
     }
 
 }
