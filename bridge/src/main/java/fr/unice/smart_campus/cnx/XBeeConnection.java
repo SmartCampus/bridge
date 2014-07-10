@@ -4,6 +4,7 @@ import com.rapplogic.xbee.api.*;
 import com.rapplogic.xbee.api.wpan.RxResponse16;
 import com.rapplogic.xbee.api.wpan.TxRequest16;
 import com.rapplogic.xbee.api.wpan.TxStatusResponse;
+import com.rapplogic.xbee.util.ByteUtils;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 
@@ -46,7 +47,7 @@ public class XBeeConnection implements ControllerConnection {
 
     @Override
     public void sendMessage(String str) throws IOException, InterruptedException {
-        int[] payload = toIntArray(str);
+        int[] payload = ByteUtils.stringToIntArray(str);
         // Build request
         TxRequest16 tx = new TxRequest16(destination, payload);
         System.out.println("Sending " + str + "...");
@@ -73,17 +74,6 @@ public class XBeeConnection implements ControllerConnection {
         port.close();
     }
 
-    /**
-     * Build int array from string
-     * @param str String
-     * @return Int array
-     */
-    private int[] toIntArray(String str) {
-        int[] tab = new int[str.length()];
-        for (int i = 0; i<str.length(); i++)
-            tab[i] = str.charAt(i);
-        return tab;
-    }
 
 
 

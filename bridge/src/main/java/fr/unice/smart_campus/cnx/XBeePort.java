@@ -2,6 +2,7 @@ package fr.unice.smart_campus.cnx;
 
 import com.rapplogic.xbee.api.*;
 import com.rapplogic.xbee.api.wpan.RxResponse16;
+import com.rapplogic.xbee.util.ByteUtils;
 import fr.unice.smart_campus.Utils;
 import gnu.io.CommPortIdentifier;
 import org.json.JSONObject;
@@ -111,18 +112,7 @@ public class XBeePort {
     public XBeeResponse sendSynchronous(XBeeRequest request)
             throws XBeeTimeoutException,
             XBeeException {
-       return cnx.sendSynchronous(request);
-    }
-    /**
-     * Build a string from int array
-     * @param b Int array
-     * @return String
-     */
-    public String buildStringFromInts(int[] b) {
-        StringBuffer strb = new StringBuffer();
-        for (int i = 0; i < b.length; i++)
-            strb.append((char) b[i]);
-        return strb.toString();
+        return cnx.sendSynchronous(request);
     }
 
     /**
@@ -146,20 +136,14 @@ public class XBeePort {
                 RxResponse16 rx = (RxResponse16) response;
 
                 // get data
-                String inputLine = buildStringFromInts(rx.getData());
+                String inputLine = ByteUtils.toString(rx.getData());
 
                 if ((listener != null) && (inputLine != null) && (!inputLine.contains("SND"))){
                     if ((inputLine.contains("\n")) || (inputLine.contains("\r"))){
 
                         strb.append(inputLine);
-                        // If message received != previous message received
-                        //if (!strb.toString().equals(echoPrevention)) {
-                        //    echoPrevention = strb.toString();
-                           System.out.println("Received: " + strb.toString());
-                            listener.messageReceived(strb.toString());
-                       // } else {
-                       //     System.err.println("Echo message received... dropping");
-                       // }
+                        System.out.println("Received: " + strb.toString());
+                        listener.messageReceived(strb.toString());
                         strb = new StringBuffer();
 
                     }
