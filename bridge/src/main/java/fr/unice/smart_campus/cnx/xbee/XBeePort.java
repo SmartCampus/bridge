@@ -136,7 +136,7 @@ public class XBeePort implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("[INFO] Received: " + arg);
-        listener.messageReceived((String) arg);
+        listener.messageReceived(((String) arg).trim());
     }
 
     /**
